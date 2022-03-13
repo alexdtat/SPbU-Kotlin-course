@@ -7,7 +7,7 @@ fun main() {
         try {
             stringNumber = readLine() ?: throw NullPointerException("Null input.")
             val number = stringNumber.toInt()
-            val newSieveOfEratosthenes = main.libraries.SieveOfEratosthenes.SieveOfEratosthenes(number)
+            val newSieveOfEratosthenes = main.libraries.sieveOfEratosthenes.SieveOfEratosthenes(number)
             newSieveOfEratosthenes.printLesserPrimes()
             break
         } catch (exception: Exception) {
@@ -18,7 +18,5 @@ fun main() {
                 else -> throw exception
             }
         }
-
     }
 }
-

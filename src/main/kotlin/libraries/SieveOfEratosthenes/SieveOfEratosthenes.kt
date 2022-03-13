@@ -1,4 +1,4 @@
-package main.libraries.SieveOfEratosthenes
+package main.libraries.sieveOfEratosthenes
 
 class SieveOfEratosthenes(private val upperBound: Int) {
     private var isPrime = Array(1) { _ -> true }
