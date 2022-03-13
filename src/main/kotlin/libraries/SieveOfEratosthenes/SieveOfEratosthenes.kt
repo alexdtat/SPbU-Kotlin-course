@@ -1,11 +1,11 @@
 package main.libraries.SieveOfEratosthenes
 
-class SieveOfEratosthenes (private val upperBound: Int){
-    private var isPrime = Array(1) { _ -> true}
+class SieveOfEratosthenes(private val upperBound: Int) {
+    private var isPrime = Array(1) { _ -> true }
     private val primes = ArrayList<Int>()
 
     private fun sievePrimes() {
-        isPrime = Array(upperBound + 1) { _ -> true}
+        isPrime = Array(upperBound + 1) { _ -> true }
         isPrime[0] = false
         isPrime[1] = false
         val optimisedUpperBound = kotlin.math.floor(kotlin.math.sqrt(upperBound.toDouble())).toInt()
@@ -17,7 +17,7 @@ class SieveOfEratosthenes (private val upperBound: Int){
         }
 
         ((optimisedUpperBound + 1)..upperBound).forEach { index ->
-            if(isPrime[index])
+            if (isPrime[index])
                 primes.add(index)
         }
     }
@@ -28,6 +28,7 @@ class SieveOfEratosthenes (private val upperBound: Int){
             print("${primes[index]}\t")
         }
     }
+
     fun getPrimes(): ArrayList<Int> {
         return primes
     }
