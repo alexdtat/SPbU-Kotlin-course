@@ -9,7 +9,7 @@ abstract class Command {
     abstract fun reverseCommand()
 }
 
-class AddToEnd (private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command() {
+class AddToEnd(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command() {
     override fun directCommand() {
         processedList.add(addedNumber)
     }
@@ -19,7 +19,7 @@ class AddToEnd (private val processedList: ArrayList<Int>, private val addedNumb
     }
 }
 
-class AddToBeginning (private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command() {
+class AddToBeginning(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command() {
     override fun directCommand() {
         processedList.add(0, addedNumber)
     }
@@ -29,7 +29,8 @@ class AddToBeginning (private val processedList: ArrayList<Int>, private val add
     }
 }
 
-class Swap (private val processedList: ArrayList<Int>, private val position1: Int, private val position2: Int) : Command() {
+class Swap(private val processedList: ArrayList<Int>, private val position1: Int, private val position2: Int) :
+    Command() {
     override fun directCommand() {
         processedList[position1] = processedList[position2].also {
             processedList[position2] = processedList[position1]
@@ -51,7 +52,7 @@ class PerformedCommandStorage {
     }
 
     fun undo() {
-        require(commandList.size > 0) {"You cannot undo a command in the empty storage."}
+        require(commandList.size > 0) { "You cannot undo a command in the empty storage." }
         commandList.removeLast().reverseCommand()
     }
 
@@ -65,7 +66,7 @@ class PerformedCommandStorage {
 
     fun swap(position1: Int, position2: Int) {
         val upperBound = processedList.size - 1
-        require (position1 in 0..upperBound && position2 in 0..upperBound) {
+        require(position1 in 0..upperBound && position2 in 0..upperBound) {
             "Positions must be integers in range 0..${upperBound}."
         }
         execute(Swap(processedList, position1, position2))
@@ -77,7 +78,7 @@ class PerformedCommandStorage {
 
     fun printList() {
         println("\nThe processed Int ArrayList:")
-        for(index in processedList.indices)
+        for (index in processedList.indices)
             print("${processedList[index]}\t")
     }
 }

@@ -29,7 +29,7 @@ internal class PerformedCommandStorageTest {
     }
 
     @Test
-    fun `test correct undo after 1 command` () {
+    fun `test correct undo after 1 command`() {
         val testStorage = PerformedCommandStorage()
         testStorage.addToBeginning(5)
         testStorage.undo()
@@ -37,19 +37,21 @@ internal class PerformedCommandStorageTest {
     }
 
     @Test
-    fun `test exception swap with negative argument` () {
+    fun `test exception swap with negative argument`() {
         val testStorage = PerformedCommandStorage()
         testStorage.addToEnd(5)
-        val exception = assertThrows<IllegalArgumentException>{ testStorage.swap(-1,0) }
-        assertEquals("Positions must be integers in range 0..${testStorage.getListOfInts().size - 1}.",
-            exception.message)
+        val exception = assertThrows<IllegalArgumentException> { testStorage.swap(-1, 0) }
+        assertEquals(
+            "Positions must be integers in range 0..${testStorage.getListOfInts().size - 1}.",
+            exception.message
+        )
     }
 
     @Test
-    fun `test exception swap with out of upper bound argument` () {
+    fun `test exception swap with out of upper bound argument`() {
         val testStorage = PerformedCommandStorage()
         testStorage.addToEnd(5)
-        val exception = assertThrows<IllegalArgumentException>{ testStorage.swap(0,1) }
+        val exception = assertThrows<IllegalArgumentException> { testStorage.swap(0, 1) }
     }
 
     @Test

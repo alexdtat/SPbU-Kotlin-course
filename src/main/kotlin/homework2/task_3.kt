@@ -4,15 +4,17 @@ fun main() {
     val myCommandStorage = main.libraries.PerformedCommandStorage.PerformedCommandStorage()
     var currentCommand: String = ""
 
-    println("Use 'addToBeginning x', 'addToEnd x', 'swap i j', 'undo' commands to process list of integers" +
-            "and 'abort' to abort the session:")
-    while(currentCommand != "abort") {
+    println(
+        "Use 'addToBeginning x', 'addToEnd x', 'swap i j', 'undo' commands to process list of integers" +
+                "and 'abort' to abort the session:"
+    )
+    while (currentCommand != "abort") {
         var input = listOf<String>()
         println("Enter your command:")
         input = readln().split(' ')
         currentCommand = input[0]
-        try{
-            when(input[0]) {
+        try {
+            when (input[0]) {
                 "addToEnd" -> {
                     myCommandStorage.addToEnd(input[1].toInt())
                 }
@@ -22,16 +24,14 @@ fun main() {
                 "swap" -> {
                     try {
                         myCommandStorage.swap(input[1].toInt(), input[2].toInt())
-                    }
-                    catch (e: IllegalArgumentException) {
+                    } catch (e: IllegalArgumentException) {
                         println("Out of bounds positions.")
                     }
                 }
                 "undo" -> {
                     try {
                         myCommandStorage.undo()
-                    }
-                    catch (exception: IllegalArgumentException) {
+                    } catch (exception: IllegalArgumentException) {
                         println("Command storage is empty.")
                     }
                 }
@@ -39,8 +39,7 @@ fun main() {
                 else ->
                     println("Unknown command.")
             }
-        }
-        catch (exception: java.lang.NumberFormatException) {
+        } catch (exception: java.lang.NumberFormatException) {
             println("Cannot convert into Int.")
         }
     }
