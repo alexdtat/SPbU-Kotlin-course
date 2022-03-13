@@ -1,6 +1,6 @@
 package test.libraries.PerformedCommandStorage
 
-import main.libraries.PerformedCommandStorage.PerformedCommandStorage
+import main.libraries.performedCommandStorage.PerformedCommandStorage
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals

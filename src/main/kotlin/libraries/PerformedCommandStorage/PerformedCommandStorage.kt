@@ -1,4 +1,4 @@
-package main.libraries.PerformedCommandStorage
+package main.libraries.performedCommandStorage
 
 import kotlin.collections.ArrayList
 

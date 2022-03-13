@@ -1,7 +1,7 @@
 package main.kotlin.homework2
 
 fun main() {
-    val myCommandStorage = main.libraries.PerformedCommandStorage.PerformedCommandStorage()
+    val myCommandStorage = main.libraries.performedCommandStorage.PerformedCommandStorage()
     var currentCommand: String = ""
 
     println(
