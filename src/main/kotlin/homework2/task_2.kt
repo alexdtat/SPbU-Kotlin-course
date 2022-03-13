@@ -11,7 +11,7 @@ fun main() {
             newSieveOfEratosthenes.printLesserPrimes()
             break
         } catch (exception: Exception) {
-            when(exception){
+            when (exception) {
                 is NullPointerException -> println("Null input. Try again:")
                 is java.lang.NumberFormatException -> println("Cannot convert into Int. Try again:")
                 is IllegalArgumentException -> println("Invalid argument. Try again:")
