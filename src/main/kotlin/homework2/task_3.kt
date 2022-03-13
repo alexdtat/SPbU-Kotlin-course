@@ -9,38 +9,45 @@ fun main() {
                 "and 'abort' to abort the session:"
     )
     while (currentCommand != "abort") {
-        var input = listOf<String>()
-        println("Enter your command:")
-        input = readln().split(' ')
-        currentCommand = input[0]
         try {
-            when (input[0]) {
-                "addToEnd" -> {
-                    myCommandStorage.addToEnd(input[1].toInt())
-                }
-                "addToBeginning" -> {
-                    myCommandStorage.addToBeginning(input[1].toInt())
-                }
+            println("Enter your command:")
+            val input = readLine() ?: throw NullPointerException("Null input.")
+            val inputSplitted = input.split(' ')
+            currentCommand = inputSplitted[0]
+
+            when(currentCommand) {
+                "abort" -> { }
+                "undo" -> { }
+                else -> if (inputSplitted.size <= 1) throw IllegalArgumentException("Lack of arguments.")
+            }
+
+            when (currentCommand) {
+                "abort" -> { }
+                "undo" -> myCommandStorage.undo()
+                "addToEnd" -> myCommandStorage.addToEnd(inputSplitted[1].toInt())
+                "addToBeginning" -> myCommandStorage.addToBeginning(inputSplitted[1].toInt())
                 "swap" -> {
-                    try {
-                        myCommandStorage.swap(input[1].toInt(), input[2].toInt())
-                    } catch (e: IllegalArgumentException) {
-                        println("Out of bounds positions.")
-                    }
+                    if(inputSplitted.size <= 2) throw IllegalArgumentException("One argument instead of two.")
+                    myCommandStorage.swap(inputSplitted[1].toInt(), inputSplitted[2].toInt())
                 }
-                "undo" -> {
-                    try {
-                        myCommandStorage.undo()
-                    } catch (exception: IllegalArgumentException) {
-                        println("Command storage is empty.")
-                    }
-                }
-                "abort" -> break
                 else ->
                     println("Unknown command.")
             }
-        } catch (exception: java.lang.NumberFormatException) {
-            println("Cannot convert into Int.")
+        } catch (exception: Exception) {
+            when(exception) {
+                is java.lang.NumberFormatException -> println("Cannot convert into Int.")
+                is IllegalArgumentException -> {
+                    when(exception.message) {
+                        "You cannot undo a command in the empty storage." ->  println("Command storage is empty.")
+                        "Positions must be integers in range 0..${myCommandStorage.getListOfInts().size - 1}." ->
+                            println("Out of bounds positions.")
+                        "Lack of arguments." -> println("Arguments needed.")
+                        "One argument instead of two." -> println("Swap command needs 2 arguments.")
+                        else -> throw exception
+                    }
+                }
+                else -> throw exception
+            }
         }
     }
 }
