@@ -15,30 +15,30 @@ fun main() {
             val inputSplitted = input.split(' ')
             currentCommand = inputSplitted[0]
 
-            when(currentCommand) {
-                "abort" -> { }
-                "undo" -> { }
+            when (currentCommand) {
+                "abort" -> {}
+                "undo" -> {}
                 else -> if (inputSplitted.size <= 1) throw IllegalArgumentException("Lack of arguments.")
             }
 
             when (currentCommand) {
-                "abort" -> { }
+                "abort" -> {}
                 "undo" -> myCommandStorage.undo()
                 "addToEnd" -> myCommandStorage.addToEnd(inputSplitted[1].toInt())
                 "addToBeginning" -> myCommandStorage.addToBeginning(inputSplitted[1].toInt())
                 "swap" -> {
-                    if(inputSplitted.size <= 2) throw IllegalArgumentException("One argument instead of two.")
+                    if (inputSplitted.size <= 2) throw IllegalArgumentException("One argument instead of two.")
                     myCommandStorage.swap(inputSplitted[1].toInt(), inputSplitted[2].toInt())
                 }
                 else ->
                     println("Unknown command.")
             }
         } catch (exception: Exception) {
-            when(exception) {
+            when (exception) {
                 is java.lang.NumberFormatException -> println("Cannot convert into Int.")
                 is IllegalArgumentException -> {
-                    when(exception.message) {
-                        "You cannot undo a command in the empty storage." ->  println("Command storage is empty.")
+                    when (exception.message) {
+                        "You cannot undo a command in the empty storage." -> println("Command storage is empty.")
                         "Positions must be integers in range 0..${myCommandStorage.getListOfInts().size - 1}." ->
                             println("Out of bounds positions.")
                         "Lack of arguments." -> println("Arguments needed.")
