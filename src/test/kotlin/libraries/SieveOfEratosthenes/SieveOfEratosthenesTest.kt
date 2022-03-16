@@ -1,9 +1,9 @@
 package test.libraries.sieveOfEratosthenes
 
-import main.libraries.sieveOfEratosthenes.SieveOfEratosthenes
+import libraries.sieveOfEratosthenes.SieveOfEratosthenes
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 
 internal class SieveOfEratosthenesTest {
 

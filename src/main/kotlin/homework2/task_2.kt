@@ -1,4 +1,7 @@
-package main.kotlin.homework2
+package homework2
+
+import libraries.sieveOfEratosthenes.SieveOfEratosthenes
+import java.lang.NumberFormatException
 
 fun main() {
     var stringNumber: String?
@@ -7,13 +10,13 @@ fun main() {
         try {
             stringNumber = readLine() ?: throw NullPointerException("Null input.")
             val number = stringNumber.toInt()
-            val newSieveOfEratosthenes = main.libraries.sieveOfEratosthenes.SieveOfEratosthenes(number)
+            val newSieveOfEratosthenes = SieveOfEratosthenes(number)
             newSieveOfEratosthenes.printLesserPrimes()
             break
         } catch (exception: Exception) {
             when (exception) {
                 is NullPointerException -> println("Null input. Try again:")
-                is java.lang.NumberFormatException -> println("Cannot convert into Int. Try again:")
+                is NumberFormatException -> println("Cannot convert into Int. Try again:")
                 is IllegalArgumentException -> println("Invalid argument. Try again:")
                 else -> throw exception
             }
