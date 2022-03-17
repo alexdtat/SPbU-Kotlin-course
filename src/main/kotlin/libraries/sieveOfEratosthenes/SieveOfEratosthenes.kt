@@ -4,6 +4,11 @@ class SieveOfEratosthenes(private val upperBound: Int) {
     private var isPrime = Array(1) { _ -> true }
     private val primes = ArrayList<Int>()
 
+    init {
+        require(upperBound > 0) { "Argument must be a positive integer." }
+        sievePrimes()
+    }
+
     private fun sievePrimes() {
         isPrime = Array(upperBound + 1) { _ -> true }
         isPrime[0] = false
@@ -31,10 +36,5 @@ class SieveOfEratosthenes(private val upperBound: Int) {
 
     fun getPrimes(): ArrayList<Int> {
         return primes
-    }
-
-    init {
-        require(upperBound > 0) { "Argument must be a positive integer." }
-        sievePrimes()
     }
 }

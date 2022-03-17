@@ -1,7 +1,6 @@
-package homework2
+package homework2.task2
 
 import libraries.sieveOfEratosthenes.SieveOfEratosthenes
-import java.lang.NumberFormatException
 
 fun main() {
     var stringNumber: String?
@@ -13,13 +12,12 @@ fun main() {
             val newSieveOfEratosthenes = SieveOfEratosthenes(number)
             newSieveOfEratosthenes.printLesserPrimes()
             break
-        } catch (exception: NullPointerException) {
-            println("Null input. Try again:")
-        } catch (exception: NumberFormatException) {
+        } catch (exceptionFormat: NumberFormatException) {
             println("Cannot convert into Int. Try again:")
-        } catch (exception: IllegalArgumentException) {
+        } catch (exceptionIllegal: IllegalArgumentException) {
             println("Invalid argument. Try again:")
+        } catch (exceptionNull: NullPointerException) {
+            println("Null input. Try again:")
         }
-
     }
 }
