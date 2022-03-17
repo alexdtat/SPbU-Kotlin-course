@@ -13,13 +13,13 @@ fun main() {
             val newSieveOfEratosthenes = SieveOfEratosthenes(number)
             newSieveOfEratosthenes.printLesserPrimes()
             break
-        } catch (exception: Exception) {
-            when (exception) {
-                is NullPointerException -> println("Null input. Try again:")
-                is NumberFormatException -> println("Cannot convert into Int. Try again:")
-                is IllegalArgumentException -> println("Invalid argument. Try again:")
-                else -> throw exception
-            }
+        } catch (exception: NullPointerException) {
+            println("Null input. Try again:")
+        } catch (exception: NumberFormatException) {
+            println("Cannot convert into Int. Try again:")
+        } catch (exception: IllegalArgumentException) {
+            println("Invalid argument. Try again:")
         }
+
     }
 }
