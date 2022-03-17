@@ -7,17 +7,21 @@ fun main() {
     println("Please, input a positive integer to print all not greater primes:")
     while (true) {
         try {
-            stringNumber = readLine() ?: throw NullPointerException("Null input.")
-            val number = stringNumber.toInt()
+            //stringNumber = readLine() ?: throw NullPointerException("Null input.")
+            var number = 0
+            stringNumber = readLine()
+            if(stringNumber == null) {
+                println("Null input. Please, try again:")
+            } else {
+                number = stringNumber.toInt()
+            }
             val newSieveOfEratosthenes = SieveOfEratosthenes(number)
             newSieveOfEratosthenes.printLesserPrimes()
             break
         } catch (exceptionFormat: NumberFormatException) {
-            println("Cannot convert into Int. Try again:")
+            println(exceptionFormat.message + "Cannot convert into Int. Try again:")
         } catch (exceptionIllegal: IllegalArgumentException) {
-            println("Invalid argument. Try again:")
-        } catch (exceptionNull: NullPointerException) {
-            println("Null input. Try again:")
+            println(exceptionIllegal.message + "Invalid argument. Try again:")
         }
     }
 }
