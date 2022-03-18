@@ -1,16 +1,15 @@
-package homework2.task2
+package homework.homework2
 
 import libraries.sieveOfEratosthenes.SieveOfEratosthenes
 
 fun main() {
-    var stringNumber: String?
+    var stringNumber: String? = ""
     println("Please, input a positive integer to print all not greater primes:")
     while (true) {
         try {
-            //stringNumber = readLine() ?: throw NullPointerException("Null input.")
             var number = 0
             stringNumber = readLine()
-            if(stringNumber == null) {
+            if (stringNumber == null) {
                 println("Null input. Please, try again:")
             } else {
                 number = stringNumber.toInt()
@@ -19,9 +18,9 @@ fun main() {
             newSieveOfEratosthenes.printLesserPrimes()
             break
         } catch (exceptionFormat: NumberFormatException) {
-            println(exceptionFormat.message + "Cannot convert into Int. Try again:")
+            println(exceptionFormat.message + " Cannot convert into Int. Try again:")
         } catch (exceptionIllegal: IllegalArgumentException) {
-            println(exceptionIllegal.message + "Invalid argument. Try again:")
+            println(exceptionIllegal.message + " Invalid argument. Try again:")
         }
     }
 }
