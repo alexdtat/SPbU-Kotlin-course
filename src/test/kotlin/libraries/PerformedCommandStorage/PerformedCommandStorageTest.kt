@@ -1,9 +1,9 @@
-package test.libraries.PerformedCommandStorage
+package test.libraries.performedCommandStorage
 
-import main.libraries.performedCommandStorage.PerformedCommandStorage
+import libraries.performedCommandStorage.PerformedCommandStorage
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
 
 internal class PerformedCommandStorageTest {
 
@@ -18,14 +18,14 @@ internal class PerformedCommandStorageTest {
     fun `test correct addToEnd with argument 5`() {
         val testStorage = PerformedCommandStorage()
         testStorage.addToEnd(5)
-        assertEquals(arrayListOf(5), testStorage.getListOfInts())
+        assertEquals(arrayListOf(5), testStorage.processedList)
     }
 
     @Test
     fun `test correct addToBeginning with argument 5`() {
         val testStorage = PerformedCommandStorage()
         testStorage.addToBeginning(5)
-        assertEquals(arrayListOf(5), testStorage.getListOfInts())
+        assertEquals(arrayListOf(5), testStorage.processedList)
     }
 
     @Test
@@ -33,7 +33,7 @@ internal class PerformedCommandStorageTest {
         val testStorage = PerformedCommandStorage()
         testStorage.addToBeginning(5)
         testStorage.undo()
-        assertEquals(arrayListOf(), testStorage.getListOfInts())
+        assertEquals(arrayListOf<Int>(), testStorage.processedList)
     }
 
     @Test
@@ -42,9 +42,16 @@ internal class PerformedCommandStorageTest {
         testStorage.addToEnd(5)
         val exception = assertThrows<IllegalArgumentException> { testStorage.swap(-1, 0) }
         assertEquals(
-            "Positions must be integers in range 0..${testStorage.getListOfInts().size - 1}.",
+            "Positions must be integers in range 0..${testStorage.processedList.size - 1}.",
             exception.message
         )
+    }
+
+    @Test
+    fun `test exception swap in empty list`() {
+        val testStorage = PerformedCommandStorage()
+        val exception = assertThrows<IllegalArgumentException> { testStorage.swap(0, 1) }
+        assertEquals("Cannot swap in the empty storage.", exception.message)
     }
 
     @Test
@@ -52,6 +59,10 @@ internal class PerformedCommandStorageTest {
         val testStorage = PerformedCommandStorage()
         testStorage.addToEnd(5)
         val exception = assertThrows<IllegalArgumentException> { testStorage.swap(0, 1) }
+        assertEquals(
+            "Positions must be integers in range 0..${testStorage.processedList.size - 1}.",
+            exception.message
+        )
     }
 
     @Test
@@ -69,6 +80,6 @@ internal class PerformedCommandStorageTest {
         testStorage.swap(1, 3)
         testStorage.undo()
         testStorage.undo()
-        assertEquals(arrayListOf(-10, 5, 0), testStorage.getListOfInts())
+        assertEquals(arrayListOf(-10, 5, 0), testStorage.processedList)
     }
 }

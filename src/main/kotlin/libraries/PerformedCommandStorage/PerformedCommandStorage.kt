@@ -1,13 +1,13 @@
-package main.libraries.performedCommandStorage
+package libraries.performedCommandStorage
 
 import kotlin.collections.ArrayList
 
-abstract class Command {
-    abstract fun directCommand()
-    abstract fun reverseCommand()
+interface Command {
+    fun directCommand()
+    fun reverseCommand()
 }
 
-class AddToEnd(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command() {
+class AddToEnd(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command {
     override fun directCommand() {
         processedList.add(addedNumber)
     }
@@ -17,7 +17,7 @@ class AddToEnd(private val processedList: ArrayList<Int>, private val addedNumbe
     }
 }
 
-class AddToBeginning(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command() {
+class AddToBeginning(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command {
     override fun directCommand() {
         processedList.add(0, addedNumber)
     }
@@ -28,7 +28,7 @@ class AddToBeginning(private val processedList: ArrayList<Int>, private val adde
 }
 
 class Swap(private val processedList: ArrayList<Int>, private val position1: Int, private val position2: Int) :
-    Command() {
+    Command {
     override fun directCommand() {
         processedList[position1] = processedList[position2].also {
             processedList[position2] = processedList[position1]
@@ -42,7 +42,7 @@ class Swap(private val processedList: ArrayList<Int>, private val position1: Int
 
 class PerformedCommandStorage {
     private val commandList = ArrayList<Command>()
-    private val processedList = ArrayList<Int>()
+    val processedList = ArrayList<Int>()
 
     private fun execute(userCommand: Command) {
         commandList.add(userCommand)
@@ -65,18 +65,12 @@ class PerformedCommandStorage {
     fun swap(position1: Int, position2: Int) {
         val upperBound = processedList.size - 1
         require(position1 in 0..upperBound && position2 in 0..upperBound) {
-            "Positions must be integers in range 0..${upperBound}."
+            if (upperBound < 0) {
+                "Cannot swap in the empty storage."
+            } else {
+                "Positions must be integers in range 0..$upperBound."
+            }
         }
         execute(Swap(processedList, position1, position2))
-    }
-
-    fun getListOfInts(): ArrayList<Int> {
-        return processedList
-    }
-
-    fun printList() {
-        println("\nThe processed Int ArrayList:")
-        for (index in processedList.indices)
-            print("${processedList[index]}\t")
     }
 }
