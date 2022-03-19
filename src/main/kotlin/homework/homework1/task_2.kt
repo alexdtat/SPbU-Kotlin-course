@@ -10,8 +10,8 @@ fun main() {
             if (number == null)
                 println("Cannot convert to Int. Try again:")
             else {
-                val sieve = sieveOfEratosthenes(number)
-                println("Primes not greater than $number:\n" + sieve.joinToString(", "))
+                val sieved = sieveOfEratosthenes(number)
+                println("Primes not greater than $number:\n" + sieved.joinToString(", "))
                 break
             }
         } catch (exceptionIllegal: IllegalArgumentException) {
