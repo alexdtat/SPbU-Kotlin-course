@@ -1,15 +1,15 @@
 package test.libraries.sieveOfEratosthenes
 
-import libraries.sieveOfEratosthenes.SieveOfEratosthenes
+import libraries.sieveOfEratosthenes.sieveOfEratosthenes
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-internal class SieveOfEratosthenesTest {
+internal class sieveOfEratosthenesTest {
 
     @Test
     fun `test correct sieve with argument 1000`() {
-        val testSieve = SieveOfEratosthenes(1000)
+        val testSieve = sieveOfEratosthenes(1000)
         assertEquals(
             arrayListOf(
                 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79,
@@ -21,18 +21,19 @@ internal class SieveOfEratosthenesTest {
                 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857,
                 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997
             ),
-            testSieve.getPrimes()
+            testSieve
         )
     }
 
     @Test
     fun `test exception sieve with zero argument`() {
-        assertThrows<IllegalArgumentException> { SieveOfEratosthenes(0) }
+        val exception = assertThrows<IllegalArgumentException> { sieveOfEratosthenes(0) }
+        assertEquals("Argument must be a positive integer.", exception.message)
     }
 
     @Test
     fun `test exception sieve with negative argument`() {
-        val exception = assertThrows<IllegalArgumentException> { SieveOfEratosthenes(-10) }
+        val exception = assertThrows<IllegalArgumentException> { sieveOfEratosthenes(-10) }
         assertEquals("Argument must be a positive integer.", exception.message)
     }
 }
