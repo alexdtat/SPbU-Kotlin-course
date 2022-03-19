@@ -7,11 +7,11 @@ fun main() {
     while (true) {
         try {
             val number = readLine()?.toIntOrNull()
-            if (number == null)
+            if (number == null) {
                 println("Cannot convert to Int. Try again:")
-            else {
-                val sieved = sieveOfEratosthenes(number)
-                println("Primes not greater than $number:\n" + sieved.joinToString(", "))
+            } else {
+                val primes = sieveOfEratosthenes(number)
+                println("Primes not greater than $number:\n" + primes.joinToString(", "))
                 break
             }
         } catch (exceptionIllegal: IllegalArgumentException) {
