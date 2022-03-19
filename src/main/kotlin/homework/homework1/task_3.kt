@@ -2,44 +2,33 @@ package homework.homework1
 
 import libraries.performedCommandStorage.PerformedCommandStorage
 
-fun proccessCommand(inputSplitted: List<String>, commandStorage: PerformedCommandStorage) {
+fun processCommand(inputSplitted: List<String>, commandStorage: PerformedCommandStorage) {
     val numberOfArguments = inputSplitted.size - 1
 
     when (inputSplitted[0]) {
-        "" -> {
-            println("Null input. Try again:")
-        }
+        "" -> println("Null input. Try again:")
         "abort" -> {}
         "undo" -> commandStorage.undo()
-        "print" -> {
-            println("\nThe processed Int ArrayList:")
-            for (index in commandStorage.processedList.indices)
-                print("${commandStorage.processedList[index]}\t")
-            println("")
-        }
+        "print" -> println("\nThe processed Int list:\n" + commandStorage.processedList.joinToString(", "))
         "addToEnd" -> {
-            if (numberOfArguments < 1) {
+            if (numberOfArguments < 1)
                 println("One argument needed.")
-            } else {
+            else
                 commandStorage.addToEnd(inputSplitted[1].toInt())
-            }
         }
         "addToBeginning" -> {
-            if (numberOfArguments < 1) {
+            if (numberOfArguments < 1)
                 println("One argument needed.")
-            } else {
+            else
                 commandStorage.addToBeginning(inputSplitted[1].toInt())
-            }
         }
         "swap" -> {
-            if (numberOfArguments < 2) {
+            if (numberOfArguments < 2)
                 println("Two arguments needed.")
-            } else {
+            else
                 commandStorage.swap(inputSplitted[1].toInt(), inputSplitted[2].toInt())
-            }
         }
-        else ->
-            println("Unknown command.")
+        else -> println("Unknown command.")
     }
 }
 
@@ -63,7 +52,7 @@ fun main() {
                 currentCommand = inputSplitted[0]
             }
 
-            proccessCommand(inputSplitted, commandStorage)
+            processCommand(inputSplitted, commandStorage)
         } catch (exceptionFormat: java.lang.NumberFormatException) {
             println(exceptionFormat.message + " Cannot convert into Int.")
         } catch (exceptionIllegal: IllegalArgumentException) {

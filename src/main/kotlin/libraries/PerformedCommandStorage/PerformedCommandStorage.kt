@@ -65,11 +65,10 @@ class PerformedCommandStorage {
     fun swap(position1: Int, position2: Int) {
         val upperBound = processedList.size - 1
         require(position1 in 0..upperBound && position2 in 0..upperBound) {
-            if (upperBound < 0) {
+            if (upperBound < 0)
                 "Cannot swap in the empty storage."
-            } else {
+            else
                 "Positions must be integers in range 0..$upperBound."
-            }
         }
         execute(Swap(processedList, position1, position2))
     }
