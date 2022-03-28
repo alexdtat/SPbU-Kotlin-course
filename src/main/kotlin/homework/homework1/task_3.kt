@@ -26,7 +26,7 @@ fun processCommand(inputSplitted: List<String>, commandStorage: PerformedCommand
             if (numberOfArguments < 2)
                 println("Two arguments needed.")
             else
-                commandStorage.swap(inputSplitted[1].toInt(), inputSplitted[2].toInt())
+                commandStorage.move(inputSplitted[1].toInt(), inputSplitted[2].toInt())
         }
         else -> println("Unknown command.")
     }
@@ -37,11 +37,18 @@ fun main() {
     var currentCommand = ""
 
     println(
-        "Use 'addToBeginning x', 'addToEnd x', 'swap i j', 'undo' commands to process the list of integers, " +
-            "'print' to print the list and 'abort' to abort the session:"
+        """
+            Use:
+            'addToBeginning x'
+            'addToEnd x'
+            'move i j'
+            'undo' commands to process the list of integers;
+            'print' to print the list and
+            'abort' to abort the session:
+        """.trimIndent()
     )
     while (currentCommand != "abort") {
-        var inputSplitted: List<String> = emptyList()
+        var inputSplitted: List<String>
         try {
             println("Enter your command:")
             val input = readLine()
@@ -50,9 +57,8 @@ fun main() {
             } else {
                 inputSplitted = input.split(' ')
                 currentCommand = inputSplitted[0]
+                processCommand(inputSplitted, commandStorage)
             }
-
-            processCommand(inputSplitted, commandStorage)
         } catch (exceptionFormat: java.lang.NumberFormatException) {
             println(exceptionFormat.message + " Cannot convert into Int.")
         } catch (exceptionIllegal: IllegalArgumentException) {

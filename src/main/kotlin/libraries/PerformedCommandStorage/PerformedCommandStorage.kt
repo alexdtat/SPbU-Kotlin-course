@@ -1,14 +1,12 @@
 package libraries.performedCommandStorage
 
-import kotlin.collections.ArrayList
-
 interface Command {
-    fun directCommand()
+    fun command()
     fun reverseCommand()
 }
 
-class AddToEnd(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command {
-    override fun directCommand() {
+class AddToEnd(private val processedList: MutableList<Int>, private val addedNumber: Int) : Command {
+    override fun command() {
         processedList.add(addedNumber)
     }
 
@@ -17,8 +15,8 @@ class AddToEnd(private val processedList: ArrayList<Int>, private val addedNumbe
     }
 }
 
-class AddToBeginning(private val processedList: ArrayList<Int>, private val addedNumber: Int) : Command {
-    override fun directCommand() {
+class AddToBeginning(private val processedList: MutableList<Int>, private val addedNumber: Int) : Command {
+    override fun command() {
         processedList.add(0, addedNumber)
     }
 
@@ -27,27 +25,33 @@ class AddToBeginning(private val processedList: ArrayList<Int>, private val adde
     }
 }
 
-class Swap(private val processedList: ArrayList<Int>, private val position1: Int, private val position2: Int) :
+class Move(private val processedList: MutableList<Int>, private val origin: Int, private val destination: Int) :
     Command {
-    override fun directCommand() {
-        processedList[position1] = processedList[position2].also {
-            processedList[position2] = processedList[position1]
-        }
+    override fun command() {
+        processedList.add(destination, processedList.removeAt(origin))
     }
 
     override fun reverseCommand() {
-        directCommand()
+        command()
     }
 }
 
-class PerformedCommandStorage {
-    private val commandList = ArrayList<Command>()
-    val processedList = ArrayList<Int>()
+interface CommandStorage {
+    val processedList: List<Int>
+}
 
-    private fun execute(userCommand: Command) {
+class PerformedCommandStorage : CommandStorage {
+    private val commandList = mutableListOf<Command>()
+    override val processedList = mutableListOf<Int>()
+
+    fun execute(userCommand: Command) {
         commandList.add(userCommand)
-        userCommand.directCommand()
+        userCommand.command()
     }
+
+    /*fun getList(): List<Int> {
+        return processedList.toList()
+    }*/
 
     fun undo() {
         require(commandList.size > 0) { "You cannot undo a command in the empty storage." }
@@ -62,14 +66,14 @@ class PerformedCommandStorage {
         execute(AddToBeginning(processedList, addedNumber))
     }
 
-    fun swap(position1: Int, position2: Int) {
+    fun move(origin: Int, destination: Int) {
         val upperBound = processedList.size - 1
-        require(position1 in 0..upperBound && position2 in 0..upperBound) {
+        require(origin in processedList.indices && destination in processedList.indices) {
             if (upperBound < 0)
                 "Cannot swap in the empty storage."
             else
                 "Positions must be integers in range 0..$upperBound."
         }
-        execute(Swap(processedList, position1, position2))
+        execute(Move(processedList, origin, destination))
     }
 }
