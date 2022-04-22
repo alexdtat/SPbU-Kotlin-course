@@ -44,7 +44,8 @@ fun processCommand(inputSplitted: List<String>, commandStorage: PerformedCommand
         PossibleCommands.EMPTY.stringCommand -> println("Null input. Try again:")
         PossibleCommands.ABORT.stringCommand -> {}
         PossibleCommands.UNDO.stringCommand -> commandStorage.undo()
-        PossibleCommands.PRINT.stringCommand -> println("\nThe processed Int list:\n" + commandStorage.processedList.joinToString(", "))
+        PossibleCommands.PRINT.stringCommand ->
+            println("\nThe processed Int list:\n" + commandStorage.processedList.joinToString(", "))
         PossibleCommands.ADD_TO_END.stringCommand -> commandStorage.addToEnd(inputSplitted[1].toInt())
         PossibleCommands.ADD_TO_BEGINNING.stringCommand -> commandStorage.addToBeginning(inputSplitted[1].toInt())
         PossibleCommands.MOVE.stringCommand -> commandStorage.move(inputSplitted[1].toInt(), inputSplitted[2].toInt())
