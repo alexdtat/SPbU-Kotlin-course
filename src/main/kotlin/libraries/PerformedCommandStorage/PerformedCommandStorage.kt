@@ -1,79 +1,64 @@
 package libraries.performedCommandStorage
 
-interface Command {
-    fun command()
-    fun reverseCommand()
+fun moveArgumentsCheck(origin: Int, destination: Int, processedList: MutableList<Int>) {
+    val upperBound = processedList.size - 1
+    require(origin in processedList.indices && destination in processedList.indices) {
+        if (upperBound < 0)
+            "Cannot swap in the empty storage."
+        else
+            "Positions must be integers in range 0..$upperBound."
+    }
 }
 
-class AddToEnd(private val processedList: MutableList<Int>, private val addedNumber: Int) : Command {
-    override fun command() {
+interface Command {
+    fun command(processedList: MutableList<Int>)
+    fun reverseCommand(processedList: MutableList<Int>)
+}
+
+class AddToEnd(private val addedNumber: Int) : Command {
+    override fun command(processedList: MutableList<Int>) {
         processedList.add(addedNumber)
     }
 
-    override fun reverseCommand() {
+    override fun reverseCommand(processedList: MutableList<Int>) {
         processedList.removeLast()
     }
 }
 
-class AddToBeginning(private val processedList: MutableList<Int>, private val addedNumber: Int) : Command {
-    override fun command() {
+class AddToBeginning(private val addedNumber: Int) : Command {
+    override fun command(processedList: MutableList<Int>) {
         processedList.add(0, addedNumber)
     }
 
-    override fun reverseCommand() {
+    override fun reverseCommand(processedList: MutableList<Int>) {
         processedList.removeAt(0)
     }
 }
 
-class Move(private val processedList: MutableList<Int>, private val origin: Int, private val destination: Int) :
-    Command {
-    override fun command() {
+class Move(private val origin: Int, private val destination: Int) : Command {
+    override fun command(processedList: MutableList<Int>) {
+        moveArgumentsCheck(origin, destination, processedList)
         processedList.add(destination, processedList.removeAt(origin))
     }
 
-    override fun reverseCommand() {
-        command()
+    override fun reverseCommand(processedList: MutableList<Int>) {
+        processedList.add(origin, processedList.removeAt(destination))
     }
 }
 
-interface CommandStorage {
-    val processedList: List<Int>
-}
-
-class PerformedCommandStorage : CommandStorage {
+class PerformedCommandStorage {
     private val commandList = mutableListOf<Command>()
-    override val processedList = mutableListOf<Int>()
+    private val _processedList = mutableListOf<Int>()
+    val processedList: List<Int>
+        get() = _processedList
 
     fun execute(userCommand: Command) {
         commandList.add(userCommand)
-        userCommand.command()
+        userCommand.command(_processedList)
     }
-
-    /*fun getList(): List<Int> {
-        return processedList.toList()
-    }*/
 
     fun undo() {
         require(commandList.size > 0) { "You cannot undo a command in the empty storage." }
-        commandList.removeLast().reverseCommand()
-    }
-
-    fun addToEnd(addedNumber: Int) {
-        execute(AddToEnd(processedList, addedNumber))
-    }
-
-    fun addToBeginning(addedNumber: Int) {
-        execute(AddToBeginning(processedList, addedNumber))
-    }
-
-    fun move(origin: Int, destination: Int) {
-        val upperBound = processedList.size - 1
-        require(origin in processedList.indices && destination in processedList.indices) {
-            if (upperBound < 0)
-                "Cannot swap in the empty storage."
-            else
-                "Positions must be integers in range 0..$upperBound."
-        }
-        execute(Move(processedList, origin, destination))
+        commandList.removeLast().reverseCommand(_processedList)
     }
 }
