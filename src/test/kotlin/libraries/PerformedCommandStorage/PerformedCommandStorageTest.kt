@@ -3,18 +3,20 @@ package test.libraries.performedCommandStorage
 import libraries.performedCommandStorage.AddToBeginning
 import libraries.performedCommandStorage.AddToEnd
 import libraries.performedCommandStorage.Move
+import libraries.performedCommandStorage.MoveInEmptyStorageException
+import libraries.performedCommandStorage.MoveWithIllegalArgumentsException
 import libraries.performedCommandStorage.PerformedCommandStorage
+import libraries.performedCommandStorage.UndoInEmptyStorageException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class PerformedCommandStorageTest {
-
     @Test
     fun `test correct undo in empty storage`() {
         val testStorage = PerformedCommandStorage()
-        val exception = assertThrows<IllegalArgumentException> { testStorage.undo() }
-        assertEquals("You cannot undo a command in the empty storage.", exception.message)
+        val exception = assertThrows<UndoInEmptyStorageException> { testStorage.undo() }
+        assertEquals("Cannot undo a command in the empty storage.", exception.message)
     }
 
     @Test
@@ -40,10 +42,10 @@ internal class PerformedCommandStorageTest {
     }
 
     @Test
-    fun `test exception swap with negative argument`() {
+    fun `test exception move with negative argument`() {
         val testStorage = PerformedCommandStorage()
         testStorage.execute(AddToEnd(5))
-        val exception = assertThrows<IllegalArgumentException> { testStorage.execute(Move(-1, 0)) }
+        val exception = assertThrows<MoveWithIllegalArgumentsException> { testStorage.execute(Move(-1, 0)) }
         assertEquals(
             "Positions must be integers in range 0..${testStorage.processedList.size - 1}.",
             exception.message
@@ -51,17 +53,17 @@ internal class PerformedCommandStorageTest {
     }
 
     @Test
-    fun `test exception swap in empty list`() {
+    fun `test exception move in empty list`() {
         val testStorage = PerformedCommandStorage()
-        val exception = assertThrows<IllegalArgumentException> { testStorage.execute(Move(0, 1)) }
-        assertEquals("Cannot swap in the empty storage.", exception.message)
+        val exception = assertThrows<MoveInEmptyStorageException> { testStorage.execute(Move(0, 1)) }
+        assertEquals("Cannot move in the empty storage.", exception.message)
     }
 
     @Test
-    fun `test exception swap with out of upper bound argument`() {
+    fun `test exception move with out of upper bound argument`() {
         val testStorage = PerformedCommandStorage()
         testStorage.execute(AddToEnd(5))
-        val exception = assertThrows<IllegalArgumentException> { testStorage.execute(Move(0, 1)) }
+        val exception = assertThrows<MoveWithIllegalArgumentsException> { testStorage.execute(Move(0, 1)) }
         assertEquals(
             "Positions must be integers in range 0..${testStorage.processedList.size - 1}.",
             exception.message

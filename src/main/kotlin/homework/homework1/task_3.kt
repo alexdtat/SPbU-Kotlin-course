@@ -3,7 +3,10 @@ package homework.homework1
 import libraries.performedCommandStorage.AddToBeginning
 import libraries.performedCommandStorage.AddToEnd
 import libraries.performedCommandStorage.Move
+import libraries.performedCommandStorage.MoveInEmptyStorageException
+import libraries.performedCommandStorage.MoveWithIllegalArgumentsException
 import libraries.performedCommandStorage.PerformedCommandStorage
+import libraries.performedCommandStorage.UndoInEmptyStorageException
 
 fun PerformedCommandStorage.addToEnd(addedNumber: Int) {
     execute(AddToEnd(addedNumber))
@@ -17,80 +20,60 @@ fun PerformedCommandStorage.move(origin: Int, destination: Int) {
     execute(Move(origin, destination))
 }
 
-fun numberOfArgumentsIsCorrect(numberOfArguments: Int, command: String): Boolean {
-    val argumentsNeeded = when (command) {
-        PossibleCommands.ADD_TO_BEGINNING.stringCommand -> 1
-        PossibleCommands.ADD_TO_END.stringCommand -> 1
-        PossibleCommands.MOVE.stringCommand -> 2
-        else -> 0
-    }
-
-    if (numberOfArguments < argumentsNeeded) {
-        println("Arguments needed: $argumentsNeeded")
+fun numberOfArgumentsIsCorrect(numberOfArguments: Int, command: PossibleCommandsInfo): Boolean {
+    if (numberOfArguments < command.numberOfArguments) {
+        println("Arguments needed: ${command.numberOfArguments}")
         return false
     }
 
     return true
 }
 
-fun processCommand(inputSplitted: List<String>, commandStorage: PerformedCommandStorage) {
+fun PerformedCommandStorage.processCommand(command: PossibleCommandsInfo?, inputSplitted: List<String>) {
     val numberOfArguments = inputSplitted.size - 1
-    val stringCommand = inputSplitted[0]
 
-    if (!numberOfArgumentsIsCorrect(numberOfArguments, stringCommand))
+    if (command != null && !numberOfArgumentsIsCorrect(numberOfArguments, command))
         return
 
-    when (stringCommand) {
-        PossibleCommands.EMPTY.stringCommand -> println("Null input. Try again:")
-        PossibleCommands.ABORT.stringCommand -> {}
-        PossibleCommands.UNDO.stringCommand -> commandStorage.undo()
-        PossibleCommands.PRINT.stringCommand ->
-            println("\nThe processed Int list:\n" + commandStorage.processedList.joinToString(", "))
-        PossibleCommands.ADD_TO_END.stringCommand -> commandStorage.addToEnd(inputSplitted[1].toInt())
-        PossibleCommands.ADD_TO_BEGINNING.stringCommand -> commandStorage.addToBeginning(inputSplitted[1].toInt())
-        PossibleCommands.MOVE.stringCommand -> commandStorage.move(inputSplitted[1].toInt(), inputSplitted[2].toInt())
+    when (command) {
+        PossibleCommandsInfo.EMPTY -> println("Null input. Try again:")
+        PossibleCommandsInfo.ABORT -> {}
+        PossibleCommandsInfo.UNDO -> this.undo()
+        PossibleCommandsInfo.PRINT -> {
+            val listForPrint = this.processedList.joinToString(", ")
+            println("\nThe processed Int list:\n$listForPrint")
+        }
+        PossibleCommandsInfo.ADD_TO_END -> this.addToEnd(inputSplitted[1].toInt())
+        PossibleCommandsInfo.ADD_TO_BEGINNING -> this.addToBeginning(inputSplitted[1].toInt())
+        PossibleCommandsInfo.MOVE -> this.move(inputSplitted[1].toInt(), inputSplitted[2].toInt())
         else -> println("Unknown command.")
     }
 }
 
 fun main() {
     val commandStorage = PerformedCommandStorage()
-    var currentCommand = ""
+    var currentCommand: PossibleCommandsInfo? = PossibleCommandsInfo.EMPTY
 
-    println(
-        """
-            Use:
-            '${PossibleCommands.ADD_TO_BEGINNING.stringCommand} x'
-            '${PossibleCommands.ADD_TO_END.stringCommand} x'
-            '${PossibleCommands.MOVE.stringCommand} i j'
-            '${PossibleCommands.UNDO.stringCommand}' commands to process the list of integers;
-            '${PossibleCommands.PRINT.stringCommand}' to print the list and
-            '${PossibleCommands.ABORT.stringCommand}' to abort the session:
-        """.trimIndent()
-    )
-    while (currentCommand != "abort") {
-        var inputSplitted: List<String>
+    PossibleCommandsInfo.values().forEach { println(it.help) }
+    while (currentCommand != PossibleCommandsInfo.ABORT) {
         try {
             println("Enter your command:")
-            val input = readLine()
+            val input: String? = readLine()
             if (input == null) {
                 println("Null input. Please, try again:")
             } else {
-                inputSplitted = input.split(' ')
-                currentCommand = inputSplitted[0]
-                processCommand(inputSplitted, commandStorage)
+                val inputSplitted = input.split(' ')
+                PossibleCommandsInfo.values().find { it.stringCommand == inputSplitted[0] }.also { currentCommand = it }
+                commandStorage.processCommand(currentCommand, inputSplitted)
             }
-        } catch (exceptionFormat: java.lang.NumberFormatException) {
-            println(exceptionFormat.message + " Cannot convert into Int.")
-        } catch (exceptionIllegal: IllegalArgumentException) {
-            println(exceptionIllegal.message)
-            when (exceptionIllegal.message) {
-                "You cannot undo a command in the empty storage." -> println("Command storage is empty.")
-                "Cannot swap in the empty storage." -> println("Add some elements.")
-                "Positions must be integers in range 0..${commandStorage.processedList.size - 1}." ->
-                    println("Out of bounds positions.")
-                else -> throw exceptionIllegal
-            }
+        } catch (exceptionFormat: NumberFormatException) {
+            println(exceptionFormat.message + " Command's arguments must be integers.")
+        } catch (exceptionUndo: UndoInEmptyStorageException) {
+            println(exceptionUndo.message + " Execute some commands at first.")
+        } catch (exceptionEmptyMove: MoveInEmptyStorageException) {
+            println(exceptionEmptyMove.message + " Add some elements at first.")
+        } catch (exceptionIllegalPositionMove: MoveWithIllegalArgumentsException) {
+            println(exceptionIllegalPositionMove.message + " Please, move within bounds.")
         }
     }
 }

@@ -1,21 +1,13 @@
 package libraries.performedCommandStorage
 
-fun moveArgumentsCheck(origin: Int, destination: Int, processedList: MutableList<Int>) {
-    val upperBound = processedList.size - 1
-    require(origin in processedList.indices && destination in processedList.indices) {
-        if (upperBound < 0)
-            "Cannot swap in the empty storage."
-        else
-            "Positions must be integers in range 0..$upperBound."
-    }
-}
-
 interface Command {
+    fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException?
     fun command(processedList: MutableList<Int>)
     fun reverseCommand(processedList: MutableList<Int>)
 }
 
 class AddToEnd(private val addedNumber: Int) : Command {
+    override fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException? = null
     override fun command(processedList: MutableList<Int>) {
         processedList.add(addedNumber)
     }
@@ -26,6 +18,7 @@ class AddToEnd(private val addedNumber: Int) : Command {
 }
 
 class AddToBeginning(private val addedNumber: Int) : Command {
+    override fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException? = null
     override fun command(processedList: MutableList<Int>) {
         processedList.add(0, addedNumber)
     }
@@ -37,12 +30,22 @@ class AddToBeginning(private val addedNumber: Int) : Command {
 
 class Move(private val origin: Int, private val destination: Int) : Command {
     override fun command(processedList: MutableList<Int>) {
-        moveArgumentsCheck(origin, destination, processedList)
         processedList.add(destination, processedList.removeAt(origin))
     }
 
     override fun reverseCommand(processedList: MutableList<Int>) {
         processedList.add(origin, processedList.removeAt(destination))
+    }
+
+    override fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException? {
+        val upperBound = processedList.size - 1
+        var resultException: IllegalArgumentException? = null
+        if (upperBound < 0) {
+            resultException = MoveInEmptyStorageException()
+        } else if (!(origin in processedList.indices && destination in processedList.indices)) {
+            resultException = MoveWithIllegalArgumentsException(processedList.size - 1)
+        }
+        return resultException
     }
 }
 
@@ -53,12 +56,33 @@ class PerformedCommandStorage {
         get() = _processedList
 
     fun execute(userCommand: Command) {
-        commandList.add(userCommand)
+        val exception = userCommand.checkArgumentsException(_processedList)
+        if (exception != null) {
+            throw exception
+        }
         userCommand.command(_processedList)
+        commandList.add(userCommand)
     }
 
     fun undo() {
-        require(commandList.size > 0) { "You cannot undo a command in the empty storage." }
+        if (commandList.size == 0) {
+            throw UndoInEmptyStorageException()
+        }
         commandList.removeLast().reverseCommand(_processedList)
     }
+}
+
+class UndoInEmptyStorageException : IllegalArgumentException() {
+    override val message: String
+        get() = "Cannot undo a command in the empty storage."
+}
+
+class MoveInEmptyStorageException : IllegalArgumentException() {
+    override val message: String
+        get() = "Cannot move in the empty storage."
+}
+
+class MoveWithIllegalArgumentsException(private val upperBound: Int) : IllegalArgumentException() {
+    override val message: String
+        get() = "Positions must be integers in range 0..$upperBound."
 }
