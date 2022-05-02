@@ -29,9 +29,11 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     override fun get(key: K): V? = findNode(root, key)?.value
 
     override fun put(key: K, value: V): V? {
-        if (!containsKey(key)) size++
+        if (!containsKey(key)) {
+            size++
+        }
         val oldValue = get(key)
-        root = putForNode(root, key, value)
+        root = putNode(root, key, value)
         return oldValue
     }
 
@@ -40,10 +42,10 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     override fun remove(key: K): V? {
         val removedValue = get(key)
         if (containsKey(key)) {
-            removeNode(root, key)
+            root = removeNode(root, key)
             size--
         }
-        
+
         return removedValue
     }
 
@@ -52,18 +54,16 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     companion object {
         const val INDENT_SYMBOL = '~'
         const val INDENT_STEP = 2
-        fun <K : Comparable<K>, V> putForNode(node: AVLNode<K, V>?, insertionKey: K, insertionValue: V): AVLNode<K, V> {
-            if (node == null) {
-                return AVLNode(
-                    insertionKey,
-                    insertionValue
-                )
-            }
+        fun <K : Comparable<K>, V> putNode(node: AVLNode<K, V>?, insertionKey: K, insertionValue: V): AVLNode<K, V> {
+            node ?: return AVLNode(
+                insertionKey,
+                insertionValue
+            )
 
             when {
-                insertionKey < node.key -> node.leftChild = putForNode(node.leftChild, insertionKey, insertionValue)
-                insertionKey > node.key -> node.rightChild = putForNode(node.rightChild, insertionKey, insertionValue)
-                else -> node.setValue(insertionValue)
+                insertionKey < node.key -> node.leftChild = putNode(node.leftChild, insertionKey, insertionValue)
+                insertionKey > node.key -> node.rightChild = putNode(node.rightChild, insertionKey, insertionValue)
+                insertionKey == node.key -> node.setValue(insertionValue)
             }
 
             return node.balance()
@@ -89,13 +89,16 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
                     node.rightChild = removeNode(node.rightChild, removalKey)
                     node.balance()
                 }
-                else -> {
-                    val leftChild = node.leftChild ?: return node.rightChild
-                    val maximumOfLeftSubtree = leftChild.maximum
-                    maximumOfLeftSubtree.leftChild = leftChild.removeMaximum()
+                removalKey == node.key -> {
+                    val maximumOfLeftSubtree = node.leftChild?.maximum
+                    maximumOfLeftSubtree ?: return node.rightChild
+
+                    maximumOfLeftSubtree.leftChild = node.leftChild?.removeMaximum()
                     maximumOfLeftSubtree.rightChild = node.rightChild
+
                     maximumOfLeftSubtree.balance()
                 }
+                else -> node.balance()
             }
         }
     }

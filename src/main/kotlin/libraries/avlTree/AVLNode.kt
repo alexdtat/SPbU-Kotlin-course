@@ -4,22 +4,23 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     private var height: Int = 0
 
     var leftChild: AVLNode<K, V>? = null
-    
+
     var rightChild: AVLNode<K, V>? = null
+
+    private val balanceFactor: Int
+        get() = (leftChild?.height ?: -1) - (rightChild?.height ?: -1)
 
     val maximum: AVLNode<K, V>
         get() = rightChild?.maximum ?: this
 
     private fun updateHeight() {
-        height = maxOf(leftChild?.height ?: 0, rightChild?.height ?: 0) + 1
+        height = maxOf(leftChild?.height ?: -1, rightChild?.height ?: -1) + 1
     }
-
-    private fun getBalanceFactor() = (leftChild?.height ?: -1) - (rightChild?.height ?: -1)
 
     private fun leftRotate(): AVLNode<K, V> {
         val newRotationRoot: AVLNode<K, V> = rightChild ?: return this
         rightChild = newRotationRoot.leftChild
-        newRotationRoot.rightChild = this
+        newRotationRoot.leftChild = this
 
         this.updateHeight()
         newRotationRoot.updateHeight()
@@ -30,7 +31,7 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     private fun rightRotate(): AVLNode<K, V> {
         val newRotationRoot: AVLNode<K, V> = leftChild ?: return this
         leftChild = newRotationRoot.rightChild
-        newRotationRoot.leftChild = this
+        newRotationRoot.rightChild = this
 
         this.updateHeight()
         newRotationRoot.updateHeight()
@@ -39,29 +40,30 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     }
 
     private fun leftRightRotate(): AVLNode<K, V> {
-        val bufferRightChild = this.rightChild ?: return this
-        this.rightChild = bufferRightChild.rightRotate()
-        return this.leftRotate()
-    }
-
-    private fun rightLeftRotate(): AVLNode<K, V> {
-        val bufferLeftChild = this.leftChild ?: return this
+        val bufferLeftChild = this.leftChild ?: this
         this.leftChild = bufferLeftChild.leftRotate()
         return this.rightRotate()
     }
 
+    private fun rightLeftRotate(): AVLNode<K, V> {
+        val bufferRightChild = this.rightChild/* ?: this*/
+        this.rightChild = bufferRightChild?.rightRotate()
+        return this.leftRotate()
+    }
+
     fun balance(): AVLNode<K, V> {
         this.updateHeight()
-        return when (this.getBalanceFactor()) {
+
+        return when (this.balanceFactor) {
             LEFT_GREAT_SUPERIOR -> {
-                if (this.leftChild?.getBalanceFactor() == RIGHT_SUPERIOR) {
+                if ((this.leftChild?.balanceFactor ?: 0) == RIGHT_SUPERIOR) {
                     this.leftRightRotate()
                 } else {
                     this.rightRotate()
                 }
             }
             RIGHT_GREAT_SUPERIOR -> {
-                if (this.rightChild?.getBalanceFactor() == LEFT_SUPERIOR) {
+                if ((this.rightChild?.balanceFactor ?: 0) == LEFT_SUPERIOR) {
                     this.rightLeftRotate()
                 } else {
                     this.leftRotate()
@@ -84,16 +86,12 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         rightChild?.nodeIterator()?.let { yieldAll(it) }
     }
 
-    override fun setValue(newValue: V): V {
-        return this.value.also { this.value = newValue }
-    }
+    override fun setValue(newValue: V): V = this.value.also { this.value = newValue }
 
     fun removeMaximum(): AVLNode<K, V>? {
-        if (rightChild == null) {
-            return leftChild
-        }
+        rightChild ?: return leftChild
 
-        rightChild = rightChild?.removeMaximum().apply { updateHeight() }
+        rightChild = rightChild?.removeMaximum()
         return this.balance()
     }
 
@@ -101,7 +99,13 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         print(indentSymbol.toString().repeat(indent * indentStep))
         println("($key): $value [$height]")
 
+        if (leftChild != null) {
+            print("l")
+        }
         leftChild?.printNode(indentSymbol, indentStep, indent + 1)
+        if (rightChild != null) {
+            print("r")
+        }
         rightChild?.printNode(indentSymbol, indentStep, indent + 1)
     }
 }
