@@ -8,4 +8,4 @@ Homework 1:
 - Task 3 (Performed command storage) -- _in progress_
 
 Homework 3:
-- Task 1 -- _done_
+- Task 1 (AVL-tree) -- _done_
