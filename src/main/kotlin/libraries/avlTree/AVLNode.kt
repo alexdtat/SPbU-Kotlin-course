@@ -51,26 +51,22 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         return this.leftRotate()
     }
 
-    fun balance(): AVLNode<K, V> {
-        this.updateHeight()
-
-        return when (this.balanceFactor) {
-            LEFT_GREAT_SUPERIOR -> {
-                if ((this.leftChild?.balanceFactor ?: 0) == RIGHT_SUPERIOR) {
-                    this.leftRightRotate()
-                } else {
-                    this.rightRotate()
-                }
+    fun balance(): AVLNode<K, V> = when (this.apply { this.updateHeight() }.balanceFactor) {
+        LEFT_GREAT_SUPERIOR -> {
+            if ((this.leftChild?.balanceFactor ?: 0) == RIGHT_SUPERIOR) {
+                this.leftRightRotate()
+            } else {
+                this.rightRotate()
             }
-            RIGHT_GREAT_SUPERIOR -> {
-                if ((this.rightChild?.balanceFactor ?: 0) == LEFT_SUPERIOR) {
-                    this.rightLeftRotate()
-                } else {
-                    this.leftRotate()
-                }
-            }
-            else -> this
         }
+        RIGHT_GREAT_SUPERIOR -> {
+            if ((this.rightChild?.balanceFactor ?: 0) == LEFT_SUPERIOR) {
+                this.rightLeftRotate()
+            } else {
+                this.leftRotate()
+            }
+        }
+        else -> this
     }
 
     companion object {
