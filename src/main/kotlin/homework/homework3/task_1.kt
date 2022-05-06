@@ -61,4 +61,7 @@ fun main() {
             "\n" +
             "\n\"Jamais Vu (Derealization)\" value is: ${thoughtsTree.get("Jamais Vu (Derealization)")}"
     )
+
+    println("Tree as string representation:")
+    print(thoughtsTree.treeAsString)
 }

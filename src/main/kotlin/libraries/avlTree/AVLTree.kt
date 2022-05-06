@@ -6,6 +6,9 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     override var size: Int = 0
         private set
 
+    val treeAsString: String?
+        get() = root?.getNodeAsString(0)
+
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
         get() = iterator().asSequence().toMutableSet()
 
@@ -49,16 +52,11 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
         return removedValue
     }
 
-    fun printTree() = root?.printNode(INDENT_SYMBOL, INDENT_STEP, 0)
+    fun printTree() = println(root?.getNodeAsString(0))
 
     companion object {
-        const val INDENT_SYMBOL = '~'
-        const val INDENT_STEP = 2
         fun <K : Comparable<K>, V> putNode(node: AVLNode<K, V>?, insertionKey: K, insertionValue: V): AVLNode<K, V> {
-            node ?: return AVLNode(
-                insertionKey,
-                insertionValue
-            )
+            node ?: return AVLNode(insertionKey, insertionValue)
 
             when {
                 insertionKey < node.key -> node.leftChild = putNode(node.leftChild, insertionKey, insertionValue)
@@ -69,13 +67,11 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
             return node.balance()
         }
 
-        fun <K : Comparable<K>, V> findNode(node: AVLNode<K, V>?, searchedKey: K): AVLNode<K, V>? {
-            return when {
-                node == null -> null
-                searchedKey < node.key -> findNode(node.leftChild, searchedKey)
-                searchedKey > node.key -> findNode(node.rightChild, searchedKey)
-                else -> node
-            }
+        fun <K : Comparable<K>, V> findNode(node: AVLNode<K, V>?, searchedKey: K): AVLNode<K, V>? = when {
+            node == null -> null
+            searchedKey < node.key -> findNode(node.leftChild, searchedKey)
+            searchedKey > node.key -> findNode(node.rightChild, searchedKey)
+            else -> node
         }
 
         private fun <K : Comparable<K>, V> removeNode(node: AVLNode<K, V>?, removalKey: K): AVLNode<K, V>? {
@@ -103,9 +99,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
         }
     }
 
-    private fun iterator(): Iterator<AVLNode<K, V>> = iterator {
-        root?.let { yieldAll(it.nodeIterator()) }
-    }
+    private fun iterator(): Iterator<AVLNode<K, V>> = iterator { root?.let { yieldAll(it.nodeIterator()) } }
 }
 
 fun <K : Comparable<K>, V> avlTreeOf(vararg keyValuePairs: Pair<K, V>): AVLTree<K, V> =

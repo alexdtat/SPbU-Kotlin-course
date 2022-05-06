@@ -18,7 +18,7 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     }
 
     private fun leftRotate(): AVLNode<K, V> {
-        val newRotationRoot: AVLNode<K, V> = rightChild ?: return this
+        val newRotationRoot = rightChild ?: return this
         rightChild = newRotationRoot.leftChild
         newRotationRoot.leftChild = this
 
@@ -29,7 +29,7 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     }
 
     private fun rightRotate(): AVLNode<K, V> {
-        val newRotationRoot: AVLNode<K, V> = leftChild ?: return this
+        val newRotationRoot = leftChild ?: return this
         leftChild = newRotationRoot.rightChild
         newRotationRoot.rightChild = this
 
@@ -40,13 +40,13 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     }
 
     private fun leftRightRotate(): AVLNode<K, V> {
-        val bufferLeftChild = this.leftChild ?: this
-        this.leftChild = bufferLeftChild.leftRotate()
+        val bufferLeftChild = this.leftChild
+        this.leftChild = bufferLeftChild?.leftRotate()
         return this.rightRotate()
     }
 
     private fun rightLeftRotate(): AVLNode<K, V> {
-        val bufferRightChild = this.rightChild/* ?: this*/
+        val bufferRightChild = this.rightChild
         this.rightChild = bufferRightChild?.rightRotate()
         return this.leftRotate()
     }
@@ -78,6 +78,8 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         private const val RIGHT_GREAT_SUPERIOR = -2
         private const val LEFT_SUPERIOR = 1
         private const val RIGHT_SUPERIOR = -1
+        private const val INDENT_SYMBOL = '~'
+        private const val INDENT_STEP = 2
     }
 
     fun nodeIterator(): Iterator<AVLNode<K, V>> = iterator {
@@ -95,17 +97,20 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         return this.balance()
     }
 
-    fun printNode(indentSymbol: Char, indentStep: Int, indent: Int) {
-        print(indentSymbol.toString().repeat(indent * indentStep))
-        println("($key): $value [$height]")
+    fun getNodeAsString(indent: Int): String {
+        var nodeAsString = INDENT_SYMBOL.toString().repeat(indent * INDENT_STEP)
+        nodeAsString += "($key): $value [$height]\n"
 
         if (leftChild != null) {
-            print("l")
+            nodeAsString += "l"
+            nodeAsString += leftChild?.getNodeAsString(indent + 1)
         }
-        leftChild?.printNode(indentSymbol, indentStep, indent + 1)
+
         if (rightChild != null) {
-            print("r")
+            nodeAsString += "r"
+            nodeAsString += rightChild?.getNodeAsString(indent + 1)
         }
-        rightChild?.printNode(indentSymbol, indentStep, indent + 1)
+
+        return nodeAsString
     }
 }
