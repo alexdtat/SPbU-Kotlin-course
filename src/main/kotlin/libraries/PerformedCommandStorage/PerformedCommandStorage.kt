@@ -1,13 +1,12 @@
 package libraries.performedCommandStorage
 
 interface Command {
-    fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException?
+    fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException? = null
     fun command(processedList: MutableList<Int>)
     fun reverseCommand(processedList: MutableList<Int>)
 }
 
 class AddToEnd(private val addedNumber: Int) : Command {
-    override fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException? = null
     override fun command(processedList: MutableList<Int>) {
         processedList.add(addedNumber)
     }
@@ -18,7 +17,6 @@ class AddToEnd(private val addedNumber: Int) : Command {
 }
 
 class AddToBeginning(private val addedNumber: Int) : Command {
-    override fun checkArgumentsException(processedList: MutableList<Int>): IllegalArgumentException? = null
     override fun command(processedList: MutableList<Int>) {
         processedList.add(0, addedNumber)
     }
@@ -72,17 +70,9 @@ class PerformedCommandStorage {
     }
 }
 
-class UndoInEmptyStorageException : IllegalArgumentException() {
-    override val message: String
-        get() = "Cannot undo a command in the empty storage."
-}
+class UndoInEmptyStorageException : IllegalArgumentException("Cannot undo a command in the empty storage.")
 
-class MoveInEmptyStorageException : IllegalArgumentException() {
-    override val message: String
-        get() = "Cannot move in the empty storage."
-}
+class MoveInEmptyStorageException : IllegalArgumentException("Cannot move in the empty storage.")
 
-class MoveWithIllegalArgumentsException(private val upperBound: Int) : IllegalArgumentException() {
-    override val message: String
-        get() = "Positions must be integers in range 0..$upperBound."
-}
+class MoveWithIllegalArgumentsException(upperBound: Int) :
+    IllegalArgumentException("Positions must be integers in range 0..$upperBound.")
