@@ -22,7 +22,7 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         rightChild = newRotationRoot.leftChild
         newRotationRoot.leftChild = this
 
-        this.updateHeight()
+        updateHeight()
         newRotationRoot.updateHeight()
 
         return newRotationRoot
@@ -33,37 +33,37 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         leftChild = newRotationRoot.rightChild
         newRotationRoot.rightChild = this
 
-        this.updateHeight()
+        updateHeight()
         newRotationRoot.updateHeight()
 
         return newRotationRoot
     }
 
     private fun leftRightRotate(): AVLNode<K, V> {
-        val bufferLeftChild = this.leftChild
-        this.leftChild = bufferLeftChild?.leftRotate()
-        return this.rightRotate()
+        val bufferLeftChild = leftChild
+        leftChild = bufferLeftChild?.leftRotate()
+        return rightRotate()
     }
 
     private fun rightLeftRotate(): AVLNode<K, V> {
-        val bufferRightChild = this.rightChild
-        this.rightChild = bufferRightChild?.rightRotate()
-        return this.leftRotate()
+        val bufferRightChild = rightChild
+        rightChild = bufferRightChild?.rightRotate()
+        return leftRotate()
     }
 
-    fun balance(): AVLNode<K, V> = when (this.apply { this.updateHeight() }.balanceFactor) {
+    fun balance(): AVLNode<K, V> = when (apply { updateHeight() }.balanceFactor) {
         LEFT_GREAT_SUPERIOR -> {
-            if ((this.leftChild?.balanceFactor ?: 0) == RIGHT_SUPERIOR) {
-                this.leftRightRotate()
+            if ((leftChild?.balanceFactor ?: 0) == RIGHT_SUPERIOR) {
+                leftRightRotate()
             } else {
-                this.rightRotate()
+                rightRotate()
             }
         }
         RIGHT_GREAT_SUPERIOR -> {
-            if ((this.rightChild?.balanceFactor ?: 0) == LEFT_SUPERIOR) {
-                this.rightLeftRotate()
+            if ((rightChild?.balanceFactor ?: 0) == LEFT_SUPERIOR) {
+                rightLeftRotate()
             } else {
-                this.leftRotate()
+                leftRotate()
             }
         }
         else -> this
@@ -84,28 +84,21 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         rightChild?.nodeIterator()?.let { yieldAll(it) }
     }
 
-    override fun setValue(newValue: V): V = this.value.also { this.value = newValue }
+    override fun setValue(newValue: V): V = value.also { value = newValue }
 
     fun removeMaximum(): AVLNode<K, V>? {
         rightChild ?: return leftChild
 
         rightChild = rightChild?.removeMaximum()
-        return this.balance()
+        return balance()
     }
 
-    fun getNodeAsString(indent: Int): String {
+    fun getStringNodeRecursive(indent: Int): String {
         var nodeAsString = INDENT_SYMBOL.toString().repeat(indent * INDENT_STEP)
         nodeAsString += "($key): $value [$height]\n"
 
-        if (leftChild != null) {
-            nodeAsString += "l"
-            nodeAsString += leftChild?.getNodeAsString(indent + 1)
-        }
-
-        if (rightChild != null) {
-            nodeAsString += "r"
-            nodeAsString += rightChild?.getNodeAsString(indent + 1)
-        }
+        leftChild?.getStringNodeRecursive(indent + 1).let { if (it != null) nodeAsString += "l$it" }
+        rightChild?.getStringNodeRecursive(indent + 1).let { if (it != null) nodeAsString += "r$it" }
 
         return nodeAsString
     }

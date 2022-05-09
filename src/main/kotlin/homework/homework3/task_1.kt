@@ -36,8 +36,7 @@ fun main() {
         "Guillaume le Million" to 4.30
     )
 
-    println("Current thoughts tree:")
-    thoughtsTree.printTree()
+    println("Current thoughts tree:\n$thoughtsTree")
 
     thoughtsTree.remove("Anti-Object Task Force")
     thoughtsTree["Remote Viewers Division"] = 6
@@ -52,16 +51,12 @@ fun main() {
     println(
         "\n" +
             "\n" +
-            "\nThoughts tree after a few changes:"
+            "\nThoughts tree after a few changes:\n$thoughtsTree"
     )
-    thoughtsTree.printTree()
 
     println(
         "\n" +
             "\n" +
             "\n\"Jamais Vu (Derealization)\" value is: ${thoughtsTree.get("Jamais Vu (Derealization)")}"
     )
-
-    println("Tree as string representation:")
-    print(thoughtsTree.treeAsString)
 }

@@ -6,8 +6,7 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
     override var size: Int = 0
         private set
 
-    val treeAsString: String?
-        get() = root?.getNodeAsString(0)
+    override fun toString(): String = root?.getStringNodeRecursive(0) ?: ""
 
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
         get() = iterator().asSequence().toMutableSet()
@@ -51,8 +50,6 @@ class AVLTree<K : Comparable<K>, V> : MutableMap<K, V> {
 
         return removedValue
     }
-
-    fun printTree() = println(root?.getNodeAsString(0))
 
     companion object {
         fun <K : Comparable<K>, V> putNode(node: AVLNode<K, V>?, insertionKey: K, insertionValue: V): AVLNode<K, V> {
