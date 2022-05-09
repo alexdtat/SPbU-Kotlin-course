@@ -7,5 +7,9 @@ Homework 1:
 - Task 2 (Sieve of Eratosthenes) -- _done_
 - Task 3 (Performed command storage) -- _in progress_
 
+Homework 2:
+- Task 1 (Compiler plugin) -- _done (after deadline)_
+
 Homework 3:
 - Task 1 (AVL-tree) -- _done_
+- 
