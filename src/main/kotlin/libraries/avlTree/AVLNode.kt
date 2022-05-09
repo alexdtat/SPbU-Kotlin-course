@@ -74,7 +74,7 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
         private const val RIGHT_GREAT_SUPERIOR = -2
         private const val LEFT_SUPERIOR = 1
         private const val RIGHT_SUPERIOR = -1
-        private const val INDENT_SYMBOL = '~'
+        private const val INDENT_SYMBOL = "~"
         private const val INDENT_STEP = 2
     }
 
@@ -94,11 +94,11 @@ class AVLNode<K : Comparable<K>, V>(override val key: K, override var value: V) 
     }
 
     fun getStringNodeRecursive(indent: Int): String {
-        var nodeAsString = INDENT_SYMBOL.toString().repeat(indent * INDENT_STEP)
+        var nodeAsString = INDENT_SYMBOL.repeat(indent * INDENT_STEP)
         nodeAsString += "($key): $value [$height]\n"
 
-        leftChild?.getStringNodeRecursive(indent + 1).let { if (it != null) nodeAsString += "l$it" }
-        rightChild?.getStringNodeRecursive(indent + 1).let { if (it != null) nodeAsString += "r$it" }
+        leftChild?.getStringNodeRecursive(indent + 1)?.let { nodeAsString += "l$it" }
+        rightChild?.getStringNodeRecursive(indent + 1)?.let { nodeAsString += "r$it" }
 
         return nodeAsString
     }
