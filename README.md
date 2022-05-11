@@ -11,4 +11,5 @@ Homework 2:
 - Task 1 (Compiler plugin) -- _done (after deadline)_
 
 Homework 3:
-- Task 1 (AVL-tree) -- _in progress_
+- Task 1 (AVL-tree) -- _done_
+- 
