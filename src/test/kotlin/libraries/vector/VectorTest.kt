@@ -6,6 +6,11 @@ import org.junit.jupiter.api.assertThrows
 
 internal class VectorTest {
     @Test
+    fun `empty vector creation`(){
+        val exception = assertThrows<IllegalArgumentException> { Vector<IntArithmetic>(listOf()) }
+        assertEquals("There should be more than 0 coordinates.", exception.message)
+    }
+    @Test
     fun `isNull with null vector`() {
         val testVector = Vector(listOf(IntArithmetic(0), IntArithmetic(0), IntArithmetic(0)))
         assertEquals(true, testVector.isNullVector())
@@ -53,8 +58,7 @@ internal class VectorTest {
     fun `correct multiplication`() {
         val leftFactor = Vector(listOf(IntArithmetic(1), IntArithmetic(2), IntArithmetic(3)))
         val rightFactor = Vector(listOf(IntArithmetic(-1), IntArithmetic(-2), IntArithmetic(-3)))
-        val expectedVector = Vector(listOf(IntArithmetic(-1), IntArithmetic(-4), IntArithmetic(-9)))
-        assertEquals(expectedVector, leftFactor * rightFactor)
+        assertEquals(IntArithmetic(-14), leftFactor * rightFactor)
     }
 
     @Test

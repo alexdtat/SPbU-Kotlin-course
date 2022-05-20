@@ -18,8 +18,17 @@ data class Vector<T : ArithmeticAvailable<T>>(val coordinates: List<T>) {
         return Vector(List(size) { coordinates[it] - subtrahendVector.coordinates[it] })
     }
 
-    fun dotProduct(factorVector: Vector<T>): Vector<T> {
+    fun dotProduct(factorVector: Vector<T>): T {
         require(size == factorVector.size) { "For dot multiplication vectors should have same sizes." }
-        return Vector(List(size) { coordinates[it] * factorVector.coordinates[it] })
+        var result = coordinates[0] * factorVector.coordinates[0]
+        for (index in 1 until coordinates.size) {
+            result += coordinates[index] * factorVector.coordinates[index]
+        }
+
+        return result
+    }
+
+    init {
+        require(coordinates.isNotEmpty()) { "There should be more than 0 coordinates." }
     }
 }
