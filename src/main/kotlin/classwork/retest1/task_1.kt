@@ -13,5 +13,5 @@ fun main() {
         println("${additionVector.coordinates} is null vector!")
     }
     println("${vector1.coordinates} - ${vector2.coordinates} = ${(vector1 - vector2).coordinates}")
-    println("${vector1.coordinates} * ${vector2.coordinates} = ${(vector1 * vector2).coordinates}")
+    println("${vector1.coordinates} * ${vector2.coordinates} = ${(vector1 * vector2)}")
 }
