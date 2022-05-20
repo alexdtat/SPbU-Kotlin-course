@@ -6,19 +6,19 @@ import classwork.retest1.model.getRandomQuote
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-internal class BashOrgQuotesTest() {
+internal class BashOrgQuotesTest {
     @Test
-    fun `getBestQuotes is not empty`(){
+    fun `getBestQuotes is not empty`() {
         assertTrue { getBestQuotes() != "" }
     }
 
     @Test
-    fun `getLastQuotes is not empty`(){
+    fun `getLastQuotes is not empty`() {
         assertTrue { getLastQuotes() != "" }
     }
 
     @Test
-    fun `getRandomQuote is not empty`(){
+    fun `getRandomQuote is not empty`() {
         assertTrue { getRandomQuote() != "" }
     }
 }
