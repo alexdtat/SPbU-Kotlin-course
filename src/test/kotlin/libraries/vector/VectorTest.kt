@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-internal class vectorTest {
+internal class VectorTest {
     @Test
     fun `isNull with null vector`() {
         val testVector = Vector(listOf(IntArithmetic(0), IntArithmetic(0), IntArithmetic(0)))
