@@ -15,7 +15,7 @@ fun getQuotes(quotesDocument: Document): String {
 fun getLastQuotes(): String {
     val quotesDocument = Jsoup.connect(LAST_QUOTES_URL).get()
     return getQuotes(quotesDocument)
-    }
+}
 
 fun getBestQuotes(): String {
     val quotesDocument = Jsoup.connect(BEST_QUOTES_URL).get()

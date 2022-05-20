@@ -6,7 +6,7 @@ import org.junit.jupiter.api.assertThrows
 
 internal class VectorTest {
     @Test
-    fun `empty vector creation`(){
+    fun `empty vector creation`() {
         val exception = assertThrows<IllegalArgumentException> { Vector<IntArithmetic>(listOf()) }
         assertEquals("There should be more than 0 coordinates.", exception.message)
     }
