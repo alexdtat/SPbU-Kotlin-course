@@ -2,6 +2,8 @@ package libraries.mergeSort
 
 import homework.homework4and5.generateRandomMutableList
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -12,6 +14,15 @@ const val TEST_MAX_SIZE = 100
 const val TEST_SHARE_THREADS_RESOURCE = 4
 
 internal class MergeSortTest {
+    @Test
+    fun `threads mergeSort with 0 threadsResource exception`() {
+        val listForSorting = generateRandomMutableList(10)
+        val exception = assertThrows<IllegalArgumentException> {
+            listForSorting.mergeSort(0, sortingMode = SortingMode.THREADS)
+        }
+        assertEquals("There should be > 0 threads/coroutines for sorting.", exception.message)
+    }
+
     @ParameterizedTest(name = "singleThreadedMergeSort {0}")
     @MethodSource("getListForTestSort")
     fun <T : Comparable<T>> `singleThreadedMergeSort parametrized`(expected: MutableList<T>, list: MutableList<T>) {
