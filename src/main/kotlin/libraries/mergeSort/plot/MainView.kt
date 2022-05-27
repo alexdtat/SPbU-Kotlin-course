@@ -39,10 +39,10 @@ private fun PlotsButtons(
     selectedSortingMode: SortingMode?
 ) {
     Button(onClick = { onClickShowTimeFromThreadsDependency(checkedSortingMode(selectedSortingMode)) }) {
-        Text("Show time from threads dependency")
+        Text("Show time on threads dependence")
     }
     Button(onClick = { onClickShowTimeFromSizesDependency(checkedSortingMode(selectedSortingMode)) }) {
-        Text("Show time from sizes dependency")
+        Text("Show time on sizes dependence")
     }
 }
 
