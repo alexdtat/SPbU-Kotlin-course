@@ -24,9 +24,9 @@ const val SHARE_THREADS_RESOURCE = 32
 const val LINE_SIZE = 1.0
 const val HEIGHT = 720
 const val WIDTH = 1280
-const val THREADS_PICTURE_FILE_NAME = "sortingPlotThreads.png"
+const val THREADS_PICTURE_FILE_NAME = "sortingPlotParallelingResource.png"
 const val SIZES_PICTURE_FILE_NAME = "sortingPlotSizes.png"
-const val FILE_PATH = "src/main/resources/homework4"
+const val FILE_PATH = "src/main/resources/homework4and5"
 
 fun timeOnThreadsDependence(sortingMode: SortingMode) {
     val sortingModeText = if (sortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
