@@ -14,5 +14,6 @@ class ViewModel {
         timeOnSizesDependence(sortingMode)
     }
 
-    fun onClickGenerateList(size: Int) = generateRandomMutableList(size)
+    fun onClickGenerateList(size: Int, lowerBound: Int, upperBound: Int) =
+        generateRandomMutableList(size, lowerBound, upperBound)
 }

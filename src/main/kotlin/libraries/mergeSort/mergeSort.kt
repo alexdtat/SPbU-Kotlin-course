@@ -1,5 +1,8 @@
 package libraries.mergeSort
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 private fun <T : Comparable<T>> MutableList<T>.multithreadedMergeSort(
     threadsResource: Int = 1,
     bufferList: MutableList<T>,
@@ -26,20 +29,20 @@ private fun <T : Comparable<T>> MutableList<T>.multithreadedMergeSort(
 }
 
 fun <T : Comparable<T>> MutableList<T>.mergeSort(
-    threadsResource: Int = 1,
+    parallelingResource: Int = 1,
     sortingMode: SortingMode,
 ): MutableList<T> {
-    require(threadsResource > 0) { "There should be > 0 threads for sorting." }
+    require(parallelingResource > 0) { "There should be > 0 threads/coroutines for sorting." }
     if (this.size < 2) {
         return this
     }
 
     val bufferList = this.toMutableList()
-    when (threadsResource) {
+    when (parallelingResource) {
         1 -> singleThreadedMergeSort(bufferList)
         else -> when (sortingMode) {
-            SortingMode.COROUTINES -> { TODO("To be implemented in the next homework.") }
-            SortingMode.THREADS -> multithreadedMergeSort(threadsResource, bufferList, sortingMode)
+            SortingMode.COROUTINES -> coroutineMergeSort(parallelingResource, bufferList, sortingMode)
+            SortingMode.THREADS -> multithreadedMergeSort(parallelingResource, bufferList, sortingMode)
         }
     }
 
@@ -82,4 +85,29 @@ private fun <T : Comparable<T>> MutableList<T>.merge(
     }
 
     return this
+}
+
+private fun <T : Comparable<T>> MutableList<T>.coroutineMergeSort(
+    coroutinesResource: Int,
+    bufferList: MutableList<T>,
+    sortingMode: SortingMode
+): MutableList<T> {
+    val middle = (this.size + 1) / 2
+    val leftCoroutinesResource = (coroutinesResource + 1) / 2
+    val rightCoroutinesResource = coroutinesResource - leftCoroutinesResource
+    var leftHalfSorted = mutableListOf<T>()
+    var rightHalfSorted = mutableListOf<T>()
+    runBlocking {
+        val leftHalfSorting = launch {
+            leftHalfSorted = bufferList.subList(0, middle).mergeSort(leftCoroutinesResource, sortingMode)
+        }
+        leftHalfSorting.join()
+        val rightHalfSorting = launch {
+            rightHalfSorted =
+                bufferList.subList(middle, bufferList.size).mergeSort(rightCoroutinesResource, sortingMode)
+        }
+        rightHalfSorting.join()
+    }
+
+    return this.merge(leftHalfSorted, rightHalfSorted)
 }

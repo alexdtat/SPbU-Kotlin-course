@@ -27,6 +27,15 @@ internal class MergeSortTest {
         )
     }
 
+    @ParameterizedTest(name = "multiThreadedMergeSort {0}")
+    @MethodSource("getListForTestSort")
+    fun <T : Comparable<T>> `coroutinesMergeSort parametrized`(expected: MutableList<T>, list: MutableList<T>) {
+        assertEquals(
+            expected,
+            list.mergeSort(list.size / TEST_SHARE_THREADS_RESOURCE + 1, sortingMode = SortingMode.COROUTINES)
+        )
+    }
+
     companion object {
         private val listToExpected = mutableMapOf<MutableList<Int>, MutableList<Int>>().apply {
             repeat(CAP_NUMBER_OF_LISTS) {

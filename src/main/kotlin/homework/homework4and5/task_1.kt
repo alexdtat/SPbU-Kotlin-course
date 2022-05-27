@@ -11,7 +11,7 @@ import libraries.mergeSort.plot.ViewModel
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Multithreaded & [soon] coroutines merge sort",
+        title = "Multithreaded & coroutines merge sort",
         state = rememberWindowState(width = 1280.dp, height = 720.dp)
     ) {
         val viewModel = remember { ViewModel() }

@@ -14,12 +14,12 @@ import java.io.File
 import kotlin.system.measureTimeMillis
 
 const val LIST_SIZE = 50000
-const val THREADS_COUNT_LOWER = 128
+const val THREADS_COUNT_LOWER = 64
 const val THREADS_COUNT_UPPER = 1024
 const val THREADS_STEP = 16
 const val SIZES_LOWER = 512
-const val SIZES_UPPER = 1024
-const val SIZES_STEP = 16
+const val SIZES_UPPER = 25000
+const val SIZES_STEP = 128
 const val SHARE_THREADS_RESOURCE = 32
 const val LINE_SIZE = 1.0
 const val HEIGHT = 720
@@ -29,6 +29,7 @@ const val SIZES_PICTURE_FILE_NAME = "sortingPlotSizes.png"
 const val FILE_PATH = "src/main/resources/homework4"
 
 fun timeOnThreadsDependence(sortingMode: SortingMode) {
+    val sortingModeText = if (sortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
     val randomList = generateRandomMutableList(LIST_SIZE)
     val threadsToTimeMap = linkedMapOf<Int, Long>()
     for (threadsCount in THREADS_COUNT_LOWER..THREADS_COUNT_UPPER step THREADS_STEP) {
@@ -38,17 +39,17 @@ fun timeOnThreadsDependence(sortingMode: SortingMode) {
     }
 
     val data = mapOf(
-        "Threads count" to threadsToTimeMap.keys.toList(),
+        "$sortingModeText count" to threadsToTimeMap.keys.toList(),
         "Sorting time" to threadsToTimeMap.values.toList()
     )
 
     val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = threadsToTimeMap.keys.toList()) +
         ggsize(WIDTH, HEIGHT) + labs(
-        title = "Multithreaded merge sort",
-        subtitle = "Time dependence on threads count. List size is $LIST_SIZE."
+        title = "$sortingModeText merge sort",
+        subtitle = "Time dependence on ${sortingModeText.lowercase()} count. List size is $LIST_SIZE."
     )
 
-    val plot = letsPlot(data) { x = "Threads count"; y = "Sorting time" } + geomLine(
+    val plot = letsPlot(data) { x = "$sortingModeText count"; y = "Sorting time" } + geomLine(
         color = "orange",
         size = LINE_SIZE,
     ) + style
@@ -58,6 +59,7 @@ fun timeOnThreadsDependence(sortingMode: SortingMode) {
 }
 
 fun timeOnSizesDependence(sortingMode: SortingMode) {
+    val sortingModeText = if (sortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
     val sizesToTimeMap = linkedMapOf<Int, Long>()
     for (size in SIZES_LOWER..SIZES_UPPER step SIZES_STEP) {
         val randomList = generateRandomMutableList(size)
@@ -73,9 +75,9 @@ fun timeOnSizesDependence(sortingMode: SortingMode) {
 
     val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = sizesToTimeMap.keys.toList()) +
         ggsize(WIDTH, HEIGHT) + labs(
-        title = "Multithreaded merge sort",
+        title = "$sortingModeText merge sort",
         subtitle = "Time dependence on list size. " +
-            "There is 1/$SHARE_THREADS_RESOURCE of list's size threads resource for each list."
+            "There is 1/$SHARE_THREADS_RESOURCE of list's size paralleling resource for each list."
     )
 
     val plot = letsPlot(data) { x = "List size"; y = "Sorting time" } + geomLine(

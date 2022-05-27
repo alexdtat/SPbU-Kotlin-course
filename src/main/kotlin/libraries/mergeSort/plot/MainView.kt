@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import homework.homework4and5.SHARE_THREADS_RESOURCE
 
 const val RANGE_LIMIT = 128f
+const val LOWER_RANDOM_BOUND_SHOWCASE = -100
+const val UPPER_RANDOM_BOUND_SHOWCASE = 100
 
 private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode
     ?: throw java.lang.IllegalStateException("Sorting mode not found.")
@@ -36,25 +38,32 @@ private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode
 private fun PlotsButtons(
     onClickShowTimeFromThreadsDependency: (SortingMode) -> Unit,
     onClickShowTimeFromSizesDependency: (SortingMode) -> Unit,
-    selectedSortingMode: SortingMode?
+    selectedSortingMode: SortingMode
 ) {
+    val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "threads" else "coroutines"
     Button(onClick = { onClickShowTimeFromThreadsDependency(checkedSortingMode(selectedSortingMode)) }) {
-        Text("Show time from threads dependency")
+        Text("Show time on $sortingModeText dependence")
     }
     Button(onClick = { onClickShowTimeFromSizesDependency(checkedSortingMode(selectedSortingMode)) }) {
-        Text("Show time from sizes dependency")
+        Text("Show time on sizes dependence")
     }
 }
 
 @Composable
+private fun <T : Comparable<T>> ListStateText(list: MutableList<T>, listState: String) {
+    Text(listState, fontWeight = FontWeight.Bold)
+    Text(list.toString())
+}
+
+@Composable
 fun MainView(
-    onClickGenerateRandomList: (Int) -> MutableList<Int>,
+    onClickGenerateRandomList: (Int, Int, Int) -> MutableList<Int>,
     onClickShowTimeFromThreadsDependency: (SortingMode) -> Unit,
     onClickShowTimeFromSizesDependency: (SortingMode) -> Unit
 ) {
-    val sortingModeMap = mapOf("Multithreaded" to SortingMode.THREADS, "Coroutines" to SortingMode.COROUTINES)
+    val sortingModeMap = mapOf("Threads" to SortingMode.THREADS, "Coroutines" to SortingMode.COROUTINES)
     val radioOptions = sortingModeMap.keys.toList()
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1]) }
     val (selectedSortingMode, onSortingModeSelected) = remember { mutableStateOf(sortingModeMap[selectedOption]) }
     var listSize by remember { mutableStateOf(0) }
     var list by remember { mutableStateOf(mutableListOf<Int>()) }
@@ -71,12 +80,11 @@ fun MainView(
                 onValueChange = { listSize = it.toInt() },
                 valueRange = 0f..RANGE_LIMIT,
                 onValueChangeFinished = {
-                    list = onClickGenerateRandomList(listSize)
+                    list = onClickGenerateRandomList(listSize, LOWER_RANDOM_BOUND_SHOWCASE, UPPER_RANDOM_BOUND_SHOWCASE)
                     listState = "Generated List: "
                 }
             )
-            Text(listState, fontWeight = FontWeight.Bold)
-            Text(list.toString())
+            ListStateText(list, listState)
             radioOptions.forEach { text ->
                 Row(
                     Modifier.fillMaxWidth().selectable(
@@ -95,17 +103,19 @@ fun MainView(
                             onSortingModeSelected(sortingModeMap[text])
                         }
                     )
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(start = 32.dp)
-                    )
+                    Text(text = text, modifier = Modifier.padding(start = 32.dp))
                 }
             }
             Button(onClick = {
+                val parallelingResource = list.size / SHARE_THREADS_RESOURCE + 1
                 listState = "Sorted List: "
-                list.mergeSort(list.size / SHARE_THREADS_RESOURCE + 1, sortingMode = SortingMode.THREADS)
+                list.mergeSort(parallelingResource, checkedSortingMode(selectedSortingMode))
             }) { Text("SORT LIST") }
-            PlotsButtons(onClickShowTimeFromThreadsDependency, onClickShowTimeFromSizesDependency, selectedSortingMode)
+            PlotsButtons(
+                onClickShowTimeFromThreadsDependency,
+                onClickShowTimeFromSizesDependency,
+                checkedSortingMode(selectedSortingMode)
+            )
         }
     }
 }
