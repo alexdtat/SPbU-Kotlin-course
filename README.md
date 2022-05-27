@@ -11,4 +11,10 @@ Homework 2:
 - Task 1 (Compiler plugin) -- _done (after deadline)_
 
 Homework 3:
-- Task 1 (AVL-tree) -- _in progress_
+- Task 1 (AVL-tree) -- _done_
+
+Homework 4:
+- Task 1 (Multithreaded merge sort) -- _done_
+
+Homework 5:
+- Task 1 (Coroutines merge sort) -- _done_
