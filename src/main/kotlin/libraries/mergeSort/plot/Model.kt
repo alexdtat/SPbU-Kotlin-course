@@ -26,7 +26,7 @@ const val HEIGHT = 720
 const val WIDTH = 1280
 const val THREADS_PICTURE_FILE_NAME = "sortingPlotThreads.png"
 const val SIZES_PICTURE_FILE_NAME = "sortingPlotSizes.png"
-const val FILE_PATH = "src/main/resources/homework4"
+const val FILE_PATH = "src/main/resources/homework4and5"
 
 fun timeOnThreadsDependence(sortingMode: SortingMode) {
     val randomList = generateRandomMutableList(LIST_SIZE)
