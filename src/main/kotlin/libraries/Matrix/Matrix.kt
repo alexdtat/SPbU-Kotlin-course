@@ -3,7 +3,7 @@ package libraries.matrix
 data class Matrix(val entries: Array<IntArray>) {
     init {
         require(
-            entries.isNotEmpty() && entries[0].isNotEmpty() && !entries.any { it.size != entries[0].size }
+            entries.isNotEmpty() && entries[0].isNotEmpty() && entries.all { it.size == entries[0].size }
         ) { "Matrix can have only natural number of lines having the same between each other natural size." }
     }
     val rowsCount = entries.size
@@ -17,6 +17,7 @@ data class Matrix(val entries: Array<IntArray>) {
     }
 
     operator fun times(multiplier: Matrix) = parallelMultiply(multiplier)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
