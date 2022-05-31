@@ -38,6 +38,7 @@ private fun PlotsButtons(
     listSize: Int,
     selectedSortingMode: SortingMode?
 ) {
+    val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "threads" else "coroutines"
     Button(onClick = {
         onClickShowTimeOnThreadsDependence(
             parallelingResourcePercentage,
@@ -45,7 +46,7 @@ private fun PlotsButtons(
             checkedSortingMode(selectedSortingMode)
         )
     }) {
-        Text("Show time on threads dependence")
+        Text("Show time on $sortingModeText dependence")
     }
     Button(onClick = {
         onClickShowTimeOnSizesDependence(
@@ -69,6 +70,8 @@ fun MainView(
     val (selectedSortingMode, onSortingModeSelected) = remember { mutableStateOf(sortingModeMap[selectedOption]) }
     var listSize by remember { mutableStateOf(1) }
     var parallelingResourcePercentage by remember { mutableStateOf(0) }
+    val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
+
     MaterialTheme {
         Column(
             Modifier.fillMaxSize().padding(5.dp),
@@ -82,7 +85,7 @@ fun MainView(
                 valueRange = 1f..SIZE_RANGE_LIMIT
             )
 
-            Text(text = "Paralleling resource (in %): $parallelingResourcePercentage", fontWeight = FontWeight.Bold)
+            Text(text = "$sortingModeText: $parallelingResourcePercentage% + 1", fontWeight = FontWeight.Bold)
             Slider(
                 value = parallelingResourcePercentage.toFloat(),
                 onValueChange = { parallelingResourcePercentage = it.toInt() },
