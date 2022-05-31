@@ -32,8 +32,8 @@ fun <T : Comparable<T>> MutableList<T>.mergeSort(
     parallelingResource: Int = 1,
     sortingMode: SortingMode,
 ): MutableList<T> {
-    require(parallelingResource > 0) { "There should be > 0 threads/coroutines for sorting." }
-    if (this.size < 2) {
+    require(parallelingResource >= 1) { "There should be > 0 threads/coroutines for sorting." }
+    if (this.size <= 1) {
         return this
     }
 

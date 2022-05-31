@@ -57,7 +57,7 @@ fun generatePlotTimeOnSize(
     return File(path)
 }
 
-fun generateTimeOnParallelingResource(
+fun generatePlotTimeOnParallelingResource(
     parallelingResourcePercentageCap: Int,
     size: Int,
     sortingMode: SortingMode
