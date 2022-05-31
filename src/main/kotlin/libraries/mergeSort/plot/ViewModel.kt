@@ -1,7 +1,7 @@
 package libraries.mergeSort.plot
 
+import homework.homework4and5.generatePlotTimeOnParallelingResource
 import homework.homework4and5.generatePlotTimeOnSize
-import homework.homework4and5.generateTimeOnParallelingResource
 import libraries.mergeSort.SortingMode
 import java.awt.Desktop
 
@@ -12,7 +12,7 @@ class ViewModel {
     }
 
     fun showTimeOnParalleling(capParallelingResourcePercentage: Int, fixedSize: Int, sortingMode: SortingMode) {
-        val picture = generateTimeOnParallelingResource(capParallelingResourcePercentage, fixedSize, sortingMode)
+        val picture = generatePlotTimeOnParallelingResource(capParallelingResourcePercentage, fixedSize, sortingMode)
         Desktop.getDesktop().browse(picture.toURI())
     }
 }

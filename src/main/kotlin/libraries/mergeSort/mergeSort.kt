@@ -29,8 +29,8 @@ fun <T : Comparable<T>> MutableList<T>.mergeSort(
     threadsResource: Int = 1,
     sortingMode: SortingMode,
 ): MutableList<T> {
-    require(threadsResource > 0) { "There should be > 0 threads/coroutines for sorting." }
-    if (this.size < 2) {
+    require(threadsResource >= 1) { "There should be at least 1 thread/coroutine for sorting." }
+    if (this.size <= 1) {
         return this
     }
 
