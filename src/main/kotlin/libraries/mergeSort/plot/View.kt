@@ -25,49 +25,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import homework.homework4and5.SHARE_THREADS_RESOURCE
 
-const val RANGE_LIMIT = 128f
-const val LOWER_RANDOM_BOUND_SHOWCASE = -100
-const val UPPER_RANDOM_BOUND_SHOWCASE = 100
+const val SIZE_RANGE_LIMIT = 25000f
+const val PARALLELING_RESOURCE_PERCENTAGE_LIMIT = 100f
 
 private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode
     ?: throw java.lang.IllegalStateException("Sorting mode not found.")
 
 @Composable
 private fun PlotsButtons(
-    onClickShowTimeFromThreadsDependency: (SortingMode) -> Unit,
-    onClickShowTimeFromSizesDependency: (SortingMode) -> Unit,
-    selectedSortingMode: SortingMode
+    onClickShowTimeOnThreadsDependence: (Int, Int, SortingMode) -> Unit,
+    onClickShowTimeOnSizesDependence: (Int, Int, SortingMode) -> Unit,
+    parallelingResourcePercentage: Int,
+    listSize: Int,
+    selectedSortingMode: SortingMode?
 ) {
     val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "threads" else "coroutines"
-    Button(onClick = { onClickShowTimeFromThreadsDependency(checkedSortingMode(selectedSortingMode)) }) {
+    Button(onClick = {
+        onClickShowTimeOnThreadsDependence(
+            parallelingResourcePercentage,
+            listSize,
+            checkedSortingMode(selectedSortingMode)
+        )
+    }) {
         Text("Show time on $sortingModeText dependence")
     }
-    Button(onClick = { onClickShowTimeFromSizesDependency(checkedSortingMode(selectedSortingMode)) }) {
+    Button(onClick = {
+        onClickShowTimeOnSizesDependence(
+            parallelingResourcePercentage,
+            listSize,
+            checkedSortingMode(selectedSortingMode)
+        )
+    }) {
         Text("Show time on sizes dependence")
     }
 }
 
 @Composable
-private fun <T : Comparable<T>> ListStateText(list: MutableList<T>, listState: String) {
-    Text(listState, fontWeight = FontWeight.Bold)
-    Text(list.toString())
-}
-
-@Composable
 fun MainView(
-    onClickGenerateRandomList: (Int, Int, Int) -> MutableList<Int>,
-    onClickShowTimeFromThreadsDependency: (SortingMode) -> Unit,
-    onClickShowTimeFromSizesDependency: (SortingMode) -> Unit
+    onClickShowTimeOnThreadsDependence: (Int, Int, SortingMode) -> Unit,
+    onClickShowTimeOnSizesDependence: (Int, Int, SortingMode) -> Unit,
 ) {
     val sortingModeMap = mapOf("Threads" to SortingMode.THREADS, "Coroutines" to SortingMode.COROUTINES)
     val radioOptions = sortingModeMap.keys.toList()
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1]) }
     val (selectedSortingMode, onSortingModeSelected) = remember { mutableStateOf(sortingModeMap[selectedOption]) }
-    var listSize by remember { mutableStateOf(0) }
-    var list by remember { mutableStateOf(mutableListOf<Int>()) }
-    var listState by remember { mutableStateOf("Generated List: ") }
+    var listSize by remember { mutableStateOf(1) }
+    var parallelingResourcePercentage by remember { mutableStateOf(0) }
+    val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
+
     MaterialTheme {
         Column(
             Modifier.fillMaxSize().padding(5.dp).verticalScroll(rememberScrollState()),
@@ -78,13 +84,15 @@ fun MainView(
             Slider(
                 value = listSize.toFloat(),
                 onValueChange = { listSize = it.toInt() },
-                valueRange = 0f..RANGE_LIMIT,
-                onValueChangeFinished = {
-                    list = onClickGenerateRandomList(listSize, LOWER_RANDOM_BOUND_SHOWCASE, UPPER_RANDOM_BOUND_SHOWCASE)
-                    listState = "Generated List: "
-                }
+                valueRange = 1f..SIZE_RANGE_LIMIT
             )
-            ListStateText(list, listState)
+
+            Text(text = "$sortingModeText: $parallelingResourcePercentage% + 1", fontWeight = FontWeight.Bold)
+            Slider(
+                value = parallelingResourcePercentage.toFloat(),
+                onValueChange = { parallelingResourcePercentage = it.toInt() },
+                valueRange = 0f..PARALLELING_RESOURCE_PERCENTAGE_LIMIT
+            )
             radioOptions.forEach { text ->
                 Row(
                     Modifier.fillMaxWidth().selectable(
@@ -106,14 +114,11 @@ fun MainView(
                     Text(text = text, modifier = Modifier.padding(start = 32.dp))
                 }
             }
-            Button(onClick = {
-                val parallelingResource = list.size / SHARE_THREADS_RESOURCE + 1
-                listState = "Sorted List: "
-                list.mergeSort(parallelingResource, checkedSortingMode(selectedSortingMode))
-            }) { Text("SORT LIST") }
             PlotsButtons(
-                onClickShowTimeFromThreadsDependency,
-                onClickShowTimeFromSizesDependency,
+                onClickShowTimeOnThreadsDependence,
+                onClickShowTimeOnSizesDependence,
+                parallelingResourcePercentage,
+                listSize,
                 checkedSortingMode(selectedSortingMode)
             )
         }

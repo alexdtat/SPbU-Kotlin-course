@@ -12,13 +12,12 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Multithreaded & coroutines merge sort",
-        state = rememberWindowState(width = 1280.dp, height = 720.dp)
+        state = rememberWindowState(width = 1000.dp, height = 550.dp)
     ) {
         val viewModel = remember { ViewModel() }
         MainView(
-            viewModel::onClickGenerateList,
-            viewModel::showTimeFromThreads,
-            viewModel::showTimeFromSizes
+            viewModel::showTimeOnParalleling,
+            viewModel::showTimeOnSizes
         )
     }
 }
