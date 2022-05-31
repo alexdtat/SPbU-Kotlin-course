@@ -20,7 +20,7 @@ internal class MergeSortTest {
         val exception = assertThrows<IllegalArgumentException> {
             listForSorting.mergeSort(0, sortingMode = SortingMode.THREADS)
         }
-        assertEquals("There should be > 0 threads/coroutines for sorting.", exception.message)
+        assertEquals("There should be at least 1 thread/coroutine for sorting.", exception.message)
     }
 
     @Test
@@ -29,7 +29,7 @@ internal class MergeSortTest {
         val exception = assertThrows<IllegalArgumentException> {
             listForSorting.mergeSort(0, sortingMode = SortingMode.COROUTINES)
         }
-        assertEquals("There should be > 0 threads/coroutines for sorting.", exception.message)
+        assertEquals("There should be at least 1 thread/coroutine for sorting.", exception.message)
     }
     @ParameterizedTest(name = "singleThreadedMergeSort {0}")
     @MethodSource("getListForTestSort")
