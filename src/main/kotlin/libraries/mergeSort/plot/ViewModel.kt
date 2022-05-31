@@ -11,7 +11,7 @@ class ViewModel {
         Desktop.getDesktop().browse(picture.toURI())
     }
 
-    fun showTimeOnThreads(capParallelingResourcePercentage: Int, fixedSize: Int, sortingMode: SortingMode) {
+    fun showTimeOnParalleling(capParallelingResourcePercentage: Int, fixedSize: Int, sortingMode: SortingMode) {
         val picture = generateTimeOnParallelingResource(capParallelingResourcePercentage, fixedSize, sortingMode)
         Desktop.getDesktop().browse(picture.toURI())
     }

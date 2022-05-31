@@ -16,7 +16,7 @@ fun main() = application {
     ) {
         val viewModel = remember { ViewModel() }
         MainView(
-            viewModel::showTimeOnThreads,
+            viewModel::showTimeOnParalleling,
             viewModel::showTimeOnSizes
         )
     }
