@@ -12,7 +12,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Multithreaded & [soon] coroutines merge sort",
-        state = rememberWindowState(width = 1000.dp, height = 500.dp)
+        state = rememberWindowState(width = 1000.dp, height = 550.dp)
     ) {
         val viewModel = remember { ViewModel() }
         MainView(

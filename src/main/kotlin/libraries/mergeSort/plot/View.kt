@@ -60,7 +60,7 @@ private fun PlotsButtons(
 
 @Composable
 fun MainView(
-    onClickShowTimeOnThreadsDependence: (Int, Int, SortingMode) -> Unit,
+    onClickShowTimeOnParallelingDependence: (Int, Int, SortingMode) -> Unit,
     onClickShowTimeOnSizesDependence: (Int, Int, SortingMode) -> Unit
 ) {
     val sortingModeMap = mapOf("Multithreaded" to SortingMode.THREADS, "Coroutines" to SortingMode.COROUTINES)
@@ -72,8 +72,8 @@ fun MainView(
     MaterialTheme {
         Column(
             Modifier.fillMaxSize().padding(5.dp),
-            Arrangement.spacedBy(5.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = "List size: $listSize", fontWeight = FontWeight.Bold)
             Slider(
@@ -98,7 +98,8 @@ fun MainView(
                             onSortingModeSelected(sortingModeMap[text])
                         }
                     ).padding(all = Dp(value = 8F)),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
                         selected = (text == selectedOption), modifier = Modifier.padding(all = Dp(value = 8F)),
@@ -107,14 +108,11 @@ fun MainView(
                             onSortingModeSelected(sortingModeMap[text])
                         }
                     )
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(start = 32.dp)
-                    )
+                    Text(text = text, modifier = Modifier.padding(start = 32.dp))
                 }
             }
             PlotsButtons(
-                onClickShowTimeOnThreadsDependence,
+                onClickShowTimeOnParallelingDependence,
                 onClickShowTimeOnSizesDependence,
                 parallelingResourcePercentage,
                 listSize,
