@@ -37,14 +37,14 @@ private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode
 private fun PlotsButtons(
     onClickShowTimeOnThreadsDependence: (Int, Int, SortingMode) -> Unit,
     onClickShowTimeOnSizesDependence: (Int, Int, SortingMode) -> Unit,
-    parallelingResourcePercentage: Int,
+    parallelingResourcePower: Int,
     listSize: Int,
     selectedSortingMode: SortingMode?
 ) {
     val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "threads" else "coroutines"
     Button(onClick = {
         onClickShowTimeOnThreadsDependence(
-            parallelingResourcePercentage,
+            parallelingResourcePower,
             listSize,
             checkedSortingMode(selectedSortingMode)
         )
@@ -53,7 +53,7 @@ private fun PlotsButtons(
     }
     Button(onClick = {
         onClickShowTimeOnSizesDependence(
-            parallelingResourcePercentage,
+            parallelingResourcePower,
             listSize,
             checkedSortingMode(selectedSortingMode)
         )

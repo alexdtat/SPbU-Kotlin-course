@@ -5,15 +5,15 @@ import libraries.mergeSort.SortingMode
 import java.awt.Desktop
 
 class ViewModel {
-    fun showTimeOnSizes(fixedParallelingResourcePercentage: Int, capSize: Int, sortingMode: SortingMode) {
+    fun showTimeOnSizes(fixedParallelingResourcePower: Int, capSize: Int, sortingMode: SortingMode) {
         val picture = Model()
-            .generatePlotTimeOnSize(fixedParallelingResourcePercentage, capSize, sortingMode)
+            .generatePlotTimeOnSize(fixedParallelingResourcePower, capSize, sortingMode)
         Desktop.getDesktop().browse(picture.toURI())
     }
 
-    fun showTimeOnParalleling(capParallelingResourcePercentage: Int, fixedSize: Int, sortingMode: SortingMode) {
+    fun showTimeOnParalleling(capParallelingResourcePower: Int, fixedSize: Int, sortingMode: SortingMode) {
         val picture = Model()
-            .generatePlotTimeOnParallelingResource(capParallelingResourcePercentage, fixedSize, sortingMode)
+            .generatePlotTimeOnParallelingResource(capParallelingResourcePower, fixedSize, sortingMode)
         Desktop.getDesktop().browse(picture.toURI())
     }
 }
