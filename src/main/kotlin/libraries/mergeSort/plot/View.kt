@@ -25,9 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.pow
 
-const val SIZE_RANGE_LIMIT = 25000f
-const val PARALLELING_RESOURCE_PERCENTAGE_LIMIT = 100f
+private object Constants {
+    const val SIZE_RANGE_LIMIT = 25000f
+    const val PARALLELING_RESOURCE_POWER_LIMIT = 12f
+}
 
 private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode
     ?: throw java.lang.IllegalStateException("Sorting mode not found.")
@@ -36,14 +39,14 @@ private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode
 private fun PlotsButtons(
     onClickShowTimeOnThreadsDependence: (Int, Int, SortingMode) -> Unit,
     onClickShowTimeOnSizesDependence: (Int, Int, SortingMode) -> Unit,
-    parallelingResourcePercentage: Int,
+    parallelingResourcePower: Int,
     listSize: Int,
     selectedSortingMode: SortingMode?
 ) {
     val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "threads" else "coroutines"
     Button(onClick = {
         onClickShowTimeOnThreadsDependence(
-            parallelingResourcePercentage,
+            parallelingResourcePower,
             listSize,
             checkedSortingMode(selectedSortingMode)
         )
@@ -52,7 +55,7 @@ private fun PlotsButtons(
     }
     Button(onClick = {
         onClickShowTimeOnSizesDependence(
-            parallelingResourcePercentage,
+            parallelingResourcePower,
             listSize,
             checkedSortingMode(selectedSortingMode)
         )
@@ -71,9 +74,9 @@ fun MainView(
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1]) }
     val (selectedSortingMode, onSortingModeSelected) = remember { mutableStateOf(sortingModeMap[selectedOption]) }
     var listSize by remember { mutableStateOf(1) }
-    var parallelingResourcePercentage by remember { mutableStateOf(0) }
+    var parallelingResourcePower by remember { mutableStateOf(0) }
     val sortingModeText = if (selectedSortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
-
+    val parallelingText = "$sortingModeText: 2^$parallelingResourcePower = ${2.0.pow(parallelingResourcePower).toInt()}"
     MaterialTheme {
         Column(
             Modifier.fillMaxSize().padding(5.dp).verticalScroll(rememberScrollState()),
@@ -84,14 +87,14 @@ fun MainView(
             Slider(
                 value = listSize.toFloat(),
                 onValueChange = { listSize = it.toInt() },
-                valueRange = 1f..SIZE_RANGE_LIMIT
+                valueRange = 1f..Constants.SIZE_RANGE_LIMIT
             )
 
-            Text(text = "$sortingModeText: $parallelingResourcePercentage% + 1", fontWeight = FontWeight.Bold)
+            Text(text = parallelingText, fontWeight = FontWeight.Bold)
             Slider(
-                value = parallelingResourcePercentage.toFloat(),
-                onValueChange = { parallelingResourcePercentage = it.toInt() },
-                valueRange = 0f..PARALLELING_RESOURCE_PERCENTAGE_LIMIT
+                value = parallelingResourcePower.toFloat(),
+                onValueChange = { parallelingResourcePower = it.toInt() },
+                valueRange = 0f..Constants.PARALLELING_RESOURCE_POWER_LIMIT
             )
             radioOptions.forEach { text ->
                 Row(
@@ -117,7 +120,7 @@ fun MainView(
             PlotsButtons(
                 onClickShowTimeOnThreadsDependence,
                 onClickShowTimeOnSizesDependence,
-                parallelingResourcePercentage,
+                parallelingResourcePower,
                 listSize,
                 checkedSortingMode(selectedSortingMode)
             )
