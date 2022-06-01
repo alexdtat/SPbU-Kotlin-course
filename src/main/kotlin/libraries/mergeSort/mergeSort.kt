@@ -101,11 +101,11 @@ private fun <T : Comparable<T>> MutableList<T>.coroutineMergeSort(
         val leftHalfSorting = launch {
             leftHalfSorted = bufferList.subList(0, middle).mergeSort(leftCoroutinesResource, sortingMode)
         }
-        leftHalfSorting.join()
         val rightHalfSorting = launch {
             rightHalfSorted =
                 bufferList.subList(middle, bufferList.size).mergeSort(rightCoroutinesResource, sortingMode)
         }
+        leftHalfSorting.join()
         rightHalfSorting.join()
     }
 
