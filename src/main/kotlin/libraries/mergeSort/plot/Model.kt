@@ -12,17 +12,18 @@ import libraries.mergeSort.mergeSort
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.math.pow
 import kotlin.system.measureTimeMillis
 
 class Model {
     fun generatePlotTimeOnSize(
-        parallelingResourcePercentage: Int,
+        parallelingResourcePower: Int,
         capSize: Int,
         sortingMode: SortingMode
     ): File {
         val sizesToTimeMap = linkedMapOf<Int, Long>()
         val plotStep = (capSize / PLOT_STEP_SHARE) + 1
-        val parallelingResource = (capSize * parallelingResourcePercentage / FULL_PERCENTAGE) + 1
+        val parallelingResource = 2.0.pow(parallelingResourcePower).toInt()
         for (size in (1..capSize) step plotStep) {
             val randomList = generateRandomMutableList(size)
             sizesToTimeMap[size] = measureTimeMillis {
@@ -38,8 +39,8 @@ class Model {
         val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = sizesToTimeMap.keys.toList()) +
             ggsize(WIDTH, HEIGHT) + labs(
             title = "Multithreaded merge sort",
-            subtitle = "Time dependence on list size. " +
-                "There are $parallelingResourcePercentage% (+1) of list's size threads for each list."
+            subtitle = "Time dependence on list size. There are 2^$parallelingResourcePower = " +
+                "${2.0.pow(parallelingResourcePower).toInt()} threads for each list."
         )
 
         val plot = letsPlot(data) { x = "List size"; y = "Sorting time" } + geomLine(
@@ -55,22 +56,21 @@ class Model {
     }
 
     fun generatePlotTimeOnParallelingResource(
-        parallelingResourcePercentageCap: Int,
+        parallelingResourcePowerCap: Int,
         size: Int,
         sortingMode: SortingMode
     ): File {
         val parallelBranchesToTimeMap = linkedMapOf<Int, Long>()
-        val parallelingResourceCap = (size * parallelingResourcePercentageCap / FULL_PERCENTAGE) + 1
-        val plotStep = (parallelingResourceCap / PLOT_STEP_SHARE) + 1
-        for (parallelBranches in (1..parallelingResourceCap) step plotStep) {
+        for (parallelingResourcePower in 0..parallelingResourcePowerCap) {
             val randomList = generateRandomMutableList(size)
-            parallelBranchesToTimeMap[parallelBranches] = measureTimeMillis {
-                randomList.mergeSort(parallelBranches, sortingMode = sortingMode)
+            val parallelingResource = 2.0.pow(parallelingResourcePower).toInt()
+            parallelBranchesToTimeMap[parallelingResourcePower] = measureTimeMillis {
+                randomList.mergeSort(parallelingResource, sortingMode = sortingMode)
             }
         }
 
         val data = mapOf(
-            "Threads count" to parallelBranchesToTimeMap.keys.toList(),
+            "Log(threads count)" to parallelBranchesToTimeMap.keys.toList(),
             "Sorting time" to parallelBranchesToTimeMap.values.toList()
         )
 
@@ -80,7 +80,7 @@ class Model {
             subtitle = "Time dependence on threads count. List size is $size."
         )
 
-        val plot = letsPlot(data) { x = "Threads count"; y = "Sorting time" } + geomLine(
+        val plot = letsPlot(data) { x = "Log(threads count)"; y = "Sorting time" } + geomLine(
             color = "orange",
             size = LINE_SIZE,
         ) + style
@@ -99,6 +99,5 @@ class Model {
         private const val SIZES_PICTURE_FILE_NAME = "sortingPlotSizes.png"
         private const val FILE_PATH = "src/main/resources/homework4and5"
         private const val PLOT_STEP_SHARE = 20
-        private const val FULL_PERCENTAGE = 100
     }
 }
