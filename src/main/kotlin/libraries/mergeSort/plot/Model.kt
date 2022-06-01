@@ -54,6 +54,10 @@ fun generatePlotTimeOnSize(
         color = "blue",
         size = LINE_SIZE,
     ) + style
+    val directory = File("$FILE_PATH/")
+    if (!directory.isDirectory) {
+        Files.createDirectory(Paths.get("$FILE_PATH/"))
+    }
     val path = ggsave(plot, filename = SIZES_PICTURE_FILE_NAME, path = FILE_PATH)
     return File(path)
 }
