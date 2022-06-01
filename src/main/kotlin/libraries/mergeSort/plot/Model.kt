@@ -10,6 +10,8 @@ import jetbrains.letsPlot.scale.scaleYContinuous
 import libraries.mergeSort.SortingMode
 import libraries.mergeSort.mergeSort
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import kotlin.system.measureTimeMillis
 
 const val LINE_SIZE = 1.0
@@ -86,6 +88,10 @@ fun generatePlotTimeOnParallelingResource(
         color = "orange",
         size = LINE_SIZE,
     ) + style
+    val directory = File("$FILE_PATH/")
+    if (!directory.isDirectory) {
+        Files.createDirectory(Paths.get("$FILE_PATH/"))
+    }
     val path = ggsave(plot, filename = PARALLELING_PICTURE_FILE_NAME, path = FILE_PATH)
     return File(path)
 }
