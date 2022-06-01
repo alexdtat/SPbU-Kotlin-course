@@ -3,6 +3,7 @@ package homework.homework4and5
 import jetbrains.letsPlot.export.ggsave
 import jetbrains.letsPlot.geom.geomLine
 import jetbrains.letsPlot.ggsize
+import jetbrains.letsPlot.intern.Plot
 import jetbrains.letsPlot.label.labs
 import jetbrains.letsPlot.letsPlot
 import jetbrains.letsPlot.scale.scaleXContinuous
@@ -16,6 +17,15 @@ import kotlin.math.pow
 import kotlin.system.measureTimeMillis
 
 class Model {
+    private fun createFileInDirectory(plot: Plot, filename: String): File {
+        val directory = File("$FILE_PATH/")
+        if (!directory.isDirectory) {
+            Files.createDirectory(Paths.get("$FILE_PATH/"))
+        }
+        val path = ggsave(plot, filename = filename, path = FILE_PATH)
+        return File(path)
+    }
+
     fun generatePlotTimeOnSize(
         parallelingResourcePower: Int,
         capSize: Int,
@@ -47,12 +57,8 @@ class Model {
             color = "blue",
             size = LINE_SIZE,
         ) + style
-        val directory = File("$FILE_PATH/")
-        if (!directory.isDirectory) {
-            Files.createDirectory(Paths.get("$FILE_PATH/"))
-        }
-        val path = ggsave(plot, filename = SIZES_PICTURE_FILE_NAME, path = FILE_PATH)
-        return File(path)
+
+        return createFileInDirectory(plot, SIZES_PICTURE_FILE_NAME)
     }
 
     fun generatePlotTimeOnParallelingResource(
@@ -84,12 +90,8 @@ class Model {
             color = "orange",
             size = LINE_SIZE,
         ) + style
-        val directory = File("$FILE_PATH/")
-        if (!directory.isDirectory) {
-            Files.createDirectory(Paths.get("$FILE_PATH/"))
-        }
-        val path = ggsave(plot, filename = PARALLELING_PICTURE_FILE_NAME, path = FILE_PATH)
-        return File(path)
+
+        return createFileInDirectory(plot, PARALLELING_PICTURE_FILE_NAME)
     }
     companion object {
         private const val LINE_SIZE = 1.0
