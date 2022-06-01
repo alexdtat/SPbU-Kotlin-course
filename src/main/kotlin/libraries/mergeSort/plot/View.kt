@@ -29,7 +29,7 @@ import kotlin.math.pow
 
 private object Constants {
     const val SIZE_RANGE_LIMIT = 25000f
-    const val PARALLELING_RESOURCE_POWER_LIMIT = 12f
+    const val PARALLELING_RESOURCE_POWER_LIMIT = 9f
 }
 
 private fun checkedSortingMode(sortingMode: SortingMode?) = sortingMode

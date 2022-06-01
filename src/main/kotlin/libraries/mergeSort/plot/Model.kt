@@ -20,7 +20,7 @@ class Model {
     private fun createFileInDirectory(plot: Plot, filename: String): File {
         val directory = File("$FILE_PATH/")
         if (!directory.isDirectory) {
-            Files.createDirectory(Paths.get("$FILE_PATH/"))
+            Files.createDirectories(Paths.get("$FILE_PATH/"))
         }
         val path = ggsave(plot, filename = filename, path = FILE_PATH)
         return File(path)
@@ -101,7 +101,7 @@ class Model {
         private const val WIDTH = 1280
         private const val PARALLELING_PICTURE_FILE_NAME = "sortingPlotParalleling.png"
         private const val SIZES_PICTURE_FILE_NAME = "sortingPlotSizes.png"
-        private const val FILE_PATH = "src/main/resources/homework4and5"
+        private const val FILE_PATH = "src/main/resources/libraries/mergeSort/plot"
         private const val PLOT_STEP_SHARE = 20
     }
 }
