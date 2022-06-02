@@ -12,4 +12,9 @@ Homework 2:
 
 Homework 3:
 - Task 1 (AVL-tree) -- _done_
-- 
+
+Homework 4:
+- Task 1 (Multithreaded merge sort) -- _done_
+
+Homework 5:
+- Task 1 (Coroutines merge sort) -- _done_
