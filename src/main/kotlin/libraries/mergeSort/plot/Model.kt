@@ -40,6 +40,7 @@ class Model {
             size = LINE_SIZE,
         ) + style
     }
+
     private fun createFileInDirectory(plot: Plot, filename: String): File {
         val directory = File("$FILE_PATH/")
         if (!directory.isDirectory) {
