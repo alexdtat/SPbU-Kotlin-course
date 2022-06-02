@@ -17,6 +17,29 @@ import kotlin.math.pow
 import kotlin.system.measureTimeMillis
 
 class Model {
+    private fun generatePlot(
+        mapForData: LinkedHashMap<Int, Long>,
+        title: String,
+        subtitle: String,
+        color: String,
+        scaleXText: String,
+    ): Plot {
+        val data = mapOf(
+            scaleXText to mapForData.keys.toList(),
+            "Sorting time" to mapForData.values.toList()
+        )
+
+        val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = mapForData.keys.toList()) +
+            ggsize(WIDTH, HEIGHT) + labs(
+            title = title,
+            subtitle = subtitle
+        )
+
+        return letsPlot(data) { x = scaleXText; y = "Sorting time" } + geomLine(
+            color = color,
+            size = LINE_SIZE,
+        ) + style
+    }
     private fun createFileInDirectory(plot: Plot, filename: String): File {
         val directory = File("$FILE_PATH/")
         if (!directory.isDirectory) {
@@ -31,6 +54,7 @@ class Model {
         capSize: Int,
         sortingMode: SortingMode
     ): File {
+        val sortingModeText = if (sortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
         val sizesToTimeMap = linkedMapOf<Int, Long>()
         val plotStep = (capSize / PLOT_STEP_SHARE) + 1
         val parallelingResource = 2.0.pow(parallelingResourcePower).toInt()
@@ -41,22 +65,14 @@ class Model {
             }
         }
 
-        val data = mapOf(
-            "List size" to sizesToTimeMap.keys.toList(),
-            "Sorting time" to sizesToTimeMap.values.toList()
+        val plot = generatePlot(
+            sizesToTimeMap,
+            "$sortingModeText merge sort",
+            "Time dependence on list size. There are 2^$parallelingResourcePower = " +
+                "${2.0.pow(parallelingResourcePower).toInt()} ${sortingModeText.lowercase()} for each list.",
+            "blue",
+            "List size",
         )
-
-        val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = sizesToTimeMap.keys.toList()) +
-            ggsize(WIDTH, HEIGHT) + labs(
-            title = "Multithreaded merge sort",
-            subtitle = "Time dependence on list size. There are 2^$parallelingResourcePower = " +
-                "${2.0.pow(parallelingResourcePower).toInt()} threads for each list."
-        )
-
-        val plot = letsPlot(data) { x = "List size"; y = "Sorting time" } + geomLine(
-            color = "blue",
-            size = LINE_SIZE,
-        ) + style
 
         return createFileInDirectory(plot, SIZES_PICTURE_FILE_NAME)
     }
@@ -66,6 +82,7 @@ class Model {
         size: Int,
         sortingMode: SortingMode
     ): File {
+        val sortingModeText = if (sortingMode == SortingMode.THREADS) "Threads" else "Coroutines"
         val parallelBranchesToTimeMap = linkedMapOf<Int, Long>()
         for (parallelingResourcePower in 0..parallelingResourcePowerCap) {
             val randomList = generateRandomMutableList(size)
@@ -75,24 +92,17 @@ class Model {
             }
         }
 
-        val data = mapOf(
-            "Log(threads count)" to parallelBranchesToTimeMap.keys.toList(),
-            "Sorting time" to parallelBranchesToTimeMap.values.toList()
+        val plot = generatePlot(
+            parallelBranchesToTimeMap,
+            "$sortingModeText merge sort",
+            "Time dependence on ${sortingModeText.lowercase()} count. List size is $size.",
+            "orange",
+            "Log(${sortingModeText.lowercase()} count)",
         )
-
-        val style = scaleYContinuous(format = "{} ms") +
-            scaleXContinuous(breaks = parallelBranchesToTimeMap.keys.toList()) + ggsize(WIDTH, HEIGHT) + labs(
-            title = "Multithreaded merge sort",
-            subtitle = "Time dependence on threads count. List size is $size."
-        )
-
-        val plot = letsPlot(data) { x = "Log(threads count)"; y = "Sorting time" } + geomLine(
-            color = "orange",
-            size = LINE_SIZE,
-        ) + style
 
         return createFileInDirectory(plot, PARALLELING_PICTURE_FILE_NAME)
     }
+
     companion object {
         private const val LINE_SIZE = 1.0
         private const val HEIGHT = 720
