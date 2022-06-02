@@ -17,6 +17,29 @@ import kotlin.math.pow
 import kotlin.system.measureTimeMillis
 
 class Model {
+    private fun generatePlot(
+        mapForData: LinkedHashMap<Int, Long>,
+        title: String,
+        subtitle: String,
+        color: String,
+        scaleXText: String,
+    ): Plot {
+        val data = mapOf(
+            scaleXText to mapForData.keys.toList(),
+            "Sorting time" to mapForData.values.toList()
+        )
+
+        val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = mapForData.keys.toList()) +
+            ggsize(WIDTH, HEIGHT) + labs(
+            title = title,
+            subtitle = subtitle
+        )
+
+        return letsPlot(data) { x = scaleXText; y = "Sorting time" } + geomLine(
+            color = color,
+            size = LINE_SIZE,
+        ) + style
+    }
     private fun createFileInDirectory(plot: Plot, filename: String): File {
         val directory = File("$FILE_PATH/")
         if (!directory.isDirectory) {
@@ -25,6 +48,7 @@ class Model {
         val path = ggsave(plot, filename = filename, path = FILE_PATH)
         return File(path)
     }
+
     fun generatePlotTimeOnSize(
         parallelingResourcePower: Int,
         capSize: Int,
@@ -41,22 +65,14 @@ class Model {
             }
         }
 
-        val data = mapOf(
-            "List size" to sizesToTimeMap.keys.toList(),
-            "Sorting time" to sizesToTimeMap.values.toList()
+        val plot = generatePlot(
+            sizesToTimeMap,
+            "$sortingModeText merge sort",
+            "Time dependence on list size. There are 2^$parallelingResourcePower = " +
+                "${2.0.pow(parallelingResourcePower).toInt()} ${sortingModeText.lowercase()} for each list.",
+            "blue",
+            "List size",
         )
-
-        val style = scaleYContinuous(format = "{} ms") + scaleXContinuous(breaks = sizesToTimeMap.keys.toList()) +
-            ggsize(WIDTH, HEIGHT) + labs(
-            title = "$sortingModeText merge sort",
-            subtitle = "Time dependence on list size. There are 2^$parallelingResourcePower = " +
-                "${2.0.pow(parallelingResourcePower).toInt()} ${sortingModeText.lowercase()} for each list."
-        )
-
-        val plot = letsPlot(data) { x = "List size"; y = "Sorting time" } + geomLine(
-            color = "blue",
-            size = LINE_SIZE,
-        ) + style
 
         return createFileInDirectory(plot, SIZES_PICTURE_FILE_NAME)
     }
@@ -76,21 +92,13 @@ class Model {
             }
         }
 
-        val data = mapOf(
-            "Log(${sortingModeText.lowercase()} count)" to parallelBranchesToTimeMap.keys.toList(),
-            "Sorting time" to parallelBranchesToTimeMap.values.toList()
+        val plot = generatePlot(
+            parallelBranchesToTimeMap,
+            "$sortingModeText merge sort",
+            "Time dependence on ${sortingModeText.lowercase()} count. List size is $size.",
+            "orange",
+            "Log(${sortingModeText.lowercase()} count)",
         )
-
-        val style = scaleYContinuous(format = "{} ms") +
-            scaleXContinuous(breaks = parallelBranchesToTimeMap.keys.toList()) + ggsize(WIDTH, HEIGHT) + labs(
-            title = "$sortingModeText merge sort",
-            subtitle = "Time dependence on ${sortingModeText.lowercase()} count. List size is $size."
-        )
-
-        val plot = letsPlot(data) { x = "Log(${sortingModeText.lowercase()} count)"; y = "Sorting time" } + geomLine(
-            color = "orange",
-            size = LINE_SIZE,
-        ) + style
 
         return createFileInDirectory(plot, PARALLELING_PICTURE_FILE_NAME)
     }
