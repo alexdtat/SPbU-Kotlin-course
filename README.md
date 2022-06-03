@@ -18,3 +18,4 @@ Homework 4:
 
 Homework 5:
 - Task 1 (Coroutines merge sort) -- _done_
+- Task 2 (Matrices parallel multiplication) -- _done_
