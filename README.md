@@ -22,4 +22,4 @@ Homework 5:
 - Task 2 (Matrices parallel multiplication) -- _done_
 
 Notable tasks from tests:
-- Bash.org quotes parser -- _done_
+- Bashorg quotes parser -- _done_
