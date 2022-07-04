@@ -21,5 +21,5 @@ Homework 5:
 - Task 1 (Coroutines merge sort) -- _done_
 - Task 2 (Matrices parallel multiplication) -- _done_
 
-Notable tests' tasks:
+Notable tasks from tests:
 - Bash.org quotes parser -- _done_
