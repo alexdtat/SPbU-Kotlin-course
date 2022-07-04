@@ -2,6 +2,7 @@
 Repository by Tatyanenko Alexyey for submitting assignments for the Kotlin course at SPbU.
 
 **The progress of the tasks will be described here.**
+
 Homework 1:
 - Task 1 (CI) -- _done_
 - Task 2 (Sieve of Eratosthenes) -- _done_
@@ -19,3 +20,6 @@ Homework 4:
 Homework 5:
 - Task 1 (Coroutines merge sort) -- _done_
 - Task 2 (Matrices parallel multiplication) -- _done_
+
+Notable tests' tasks:
+- Bash.org quotes parser -- _done_
